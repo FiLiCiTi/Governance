@@ -1,0 +1,97 @@
+#!/bin/bash
+# cc - Claude with Conversation capture
+# Records terminal session using script command
+# v2: Saves per-project to _governance/[project]/Conversations/
+#     Falls back to Governance/Conversations/ if not in a governed project
+
+CWD=$(pwd)
+PROJECT=$(basename "$CWD")
+TIMESTAMP=$(date +%Y%m%d_%H%M)
+
+# Determine log location (per-project or global fallback)
+determine_log_dir() {
+    # Check for _governance/ folder (FILICITI project structure)
+    if [[ -d "../_governance/$PROJECT" ]]; then
+        echo "../_governance/$PROJECT/Conversations"
+    elif [[ -d "./_governance" ]]; then
+        # We're at product root (e.g., COEVOLVE/), use first child
+        echo "./_governance/Conversations"
+    elif [[ -f "./CLAUDE.md" ]]; then
+        # Has CLAUDE.md but no _governance/, use project-local
+        echo "./Conversations"
+    else
+        # Fallback to global Governance
+        echo "$HOME/Desktop/Governance/Conversations"
+    fi
+}
+
+LOG_DIR=$(determine_log_dir)
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/${TIMESTAMP}_${PROJECT}.log"
+
+# Initialize session state for warm-up tracking (per-project)
+SESSION_DIR="$HOME/.claude/sessions"
+mkdir -p "$SESSION_DIR"
+
+# Create project-specific state file using sanitized project path
+# Normalize path to lowercase for consistent hashing (macOS case-insensitive)
+PROJECT_HASH=$(echo "$CWD" | tr '[:upper:]' '[:lower:]' | md5 -q 2>/dev/null || echo "$PROJECT")
+STATE_FILE="$SESSION_DIR/${PROJECT_HASH}_session.json"
+
+# Check for duplicate session (another active session for same project)
+DUPLICATE_SESSION=false
+if [[ -f "$STATE_FILE" ]]; then
+    LAST_UPDATE=$(jq -r '.last_update // 0' "$STATE_FILE" 2>/dev/null)
+    LAST_START=$(jq -r '.start_time // 0' "$STATE_FILE" 2>/dev/null)
+    NOW=$(date +%s)
+    UPDATE_AGE=$((NOW - LAST_UPDATE))
+    SESSION_AGE=$((NOW - LAST_START))
+
+    if [[ $UPDATE_AGE -lt 120 ]]; then  # Last updated < 2 minutes ago
+        # Another active session detected
+        DUPLICATE_SESSION=true
+        echo "  ⚠️  DUPLICATE SESSION DETECTED!"
+        echo "  └─ Another session for '$PROJECT' was active ${UPDATE_AGE}s ago"
+        echo "  └─ Consider creating a subproject instead"
+        echo ""
+    elif [[ $SESSION_AGE -gt 28800 ]]; then  # Session > 8 hours old
+        HOURS=$((SESSION_AGE / 3600))
+        echo "  ⚠️  Old session detected (${HOURS}h ago) - resetting state"
+    fi
+fi
+
+# Create/update state file
+cat > "$STATE_FILE" << EOF
+{
+  "start_time": $(date +%s),
+  "last_warmup": $(date +%s),
+  "last_update": $(date +%s),
+  "project": "$CWD",
+  "project_name": "$PROJECT",
+  "log_file": "$LOG_FILE",
+  "token_count": 0,
+  "tool_count": 0,
+  "duplicate_session": $DUPLICATE_SESSION
+}
+EOF
+
+echo "┌────────────────────────────────────────────────────────────────┐"
+echo "│  Governance v2 Session Started                                 │"
+echo "├────────────────────────────────────────────────────────────────┤"
+echo "│  Recording: $LOG_FILE"
+echo "│  Project:   $PROJECT"
+echo "│  Path:      $CWD"
+echo "│  Date:      $(date '+%Y-%m-%d %H:%M')"
+echo "└────────────────────────────────────────────────────────────────┘"
+echo ""
+
+# Start recording and run claude
+# macOS syntax: script -q [file] [command ...]
+# Linux syntax: script -q -c "command" [file]
+script -q "$LOG_FILE" claude $*
+
+echo ""
+echo "┌────────────────────────────────────────────────────────────────┐"
+echo "│  Session Ended                                                 │"
+echo "│  Log saved: $LOG_FILE"
+echo "└────────────────────────────────────────────────────────────────┘"

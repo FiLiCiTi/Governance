@@ -1,0 +1,57 @@
+#!/bin/bash
+# Drive Audit Script
+# Run on M1 with drives connected
+# Output: logs/DRIVE_AUDIT_[date].txt
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PLAN_DIR="$(dirname "$SCRIPT_DIR")"
+OUTPUT="$PLAN_DIR/logs/DRIVE_AUDIT_$(date +%Y%m%d_%H%M%S).txt"
+
+echo "=== DRIVE AUDIT ===" | tee "$OUTPUT"
+echo "Date: $(date)" | tee -a "$OUTPUT"
+echo "Machine: $(hostname)" | tee -a "$OUTPUT"
+echo "" | tee -a "$OUTPUT"
+
+# Get list of external volumes
+for vol in /Volumes/*/; do
+  # Skip system volumes
+  if [[ "$vol" == *"Macintosh HD"* ]] || [[ "$vol" == *"Recovery"* ]] || [[ "$vol" == *"Preboot"* ]]; then
+    continue
+  fi
+
+  echo "======================================" | tee -a "$OUTPUT"
+  echo "VOLUME: $vol" | tee -a "$OUTPUT"
+  echo "======================================" | tee -a "$OUTPUT"
+
+  # Disk usage
+  echo "" | tee -a "$OUTPUT"
+  echo "--- DISK USAGE ---" | tee -a "$OUTPUT"
+  df -h "$vol" 2>/dev/null | tee -a "$OUTPUT"
+
+  # Top-level contents
+  echo "" | tee -a "$OUTPUT"
+  echo "--- TOP-LEVEL CONTENTS ---" | tee -a "$OUTPUT"
+  ls -la "$vol" 2>/dev/null | tee -a "$OUTPUT"
+
+  # Size of each top-level folder
+  echo "" | tee -a "$OUTPUT"
+  echo "--- FOLDER SIZES ---" | tee -a "$OUTPUT"
+  du -sh "$vol"*/ 2>/dev/null | sort -h | tee -a "$OUTPUT"
+
+  # Count files
+  echo "" | tee -a "$OUTPUT"
+  echo "--- FILE COUNT ---" | tee -a "$OUTPUT"
+  file_count=$(find "$vol" -type f 2>/dev/null | wc -l)
+  folder_count=$(find "$vol" -type d 2>/dev/null | wc -l)
+  echo "Total files: $file_count" | tee -a "$OUTPUT"
+  echo "Total folders: $folder_count" | tee -a "$OUTPUT"
+
+  echo "" | tee -a "$OUTPUT"
+done
+
+echo "======================================" | tee -a "$OUTPUT"
+echo "AUDIT COMPLETE" | tee -a "$OUTPUT"
+echo "Output saved to: $OUTPUT" | tee -a "$OUTPUT"
+
+# Also update status
+echo "[$(date)] Audit complete. Results in $OUTPUT" >> "$PLAN_DIR/logs/M1_STATUS.txt"
