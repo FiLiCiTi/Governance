@@ -40,7 +40,8 @@
       "Bash(do file ~/Desktop/HD7_Test/Data/\"$f\")",
       "Bash(md5:*)",
       "Bash(tree:*)",
-      "Bash(~/Desktop/Governance/scripts/suggest_model.sh:*)"
+      "Bash(~/Desktop/Governance/scripts/suggest_model.sh:*)",
+      "Bash(gh:*)"
     ]
   }
 }
