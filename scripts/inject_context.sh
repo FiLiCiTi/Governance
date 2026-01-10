@@ -24,6 +24,38 @@ CWD_PATH=$(pwd)
 PROJECT_HASH=$(echo "$CWD_PATH" | tr '[:upper:]' '[:lower:]' | md5 -q 2>/dev/null || echo "$(basename "$CWD_PATH")")
 STATE_FILE="$HOME/.claude/sessions/${PROJECT_HASH}_session.json"
 
+# Initialize state file if it doesn't exist or is missing required fields
+if [[ ! -f "$STATE_FILE" ]]; then
+    # Create new state file with all required fields
+    mkdir -p "$HOME/.claude/sessions"
+    NOW=$(date +%s)
+    cat > "$STATE_FILE" << EOF
+{
+  "start_time": $NOW,
+  "last_warmup": $NOW,
+  "last_update": $NOW,
+  "last_calibration": 0,
+  "project": "$CWD_PATH",
+  "project_name": "$(basename "$CWD_PATH")",
+  "token_count": 0,
+  "tool_count": 0,
+  "context_factor": 1.0,
+  "duplicate_session": false
+}
+EOF
+else
+    # Ensure all required fields exist in existing state file
+    NOW=$(date +%s)
+    jq --argjson now "$NOW" '
+        .last_calibration //= 0 |
+        .context_factor //= 1.0 |
+        .last_warmup //= $now |
+        .start_time //= $now |
+        .token_count //= 0 |
+        .tool_count //= 0
+    ' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+fi
+
 # Check for manual compact flag (Option D)
 COMPACT_FLAG="$HOME/.claude/compact_flag"
 if [[ -f "$COMPACT_FLAG" ]]; then
@@ -82,15 +114,25 @@ fi
 
 # Plugin cost tracking (v2.5.1)
 PLUGIN_DISPLAY=""
-if [ -f "$HOME/.claude/plugins/installed_plugins.json" ]; then
-    HIGH_COST_PLUGINS=$(jq -r '.plugins[] | select(.name | test("output-style|ralph-wiggum")) | .name' "$HOME/.claude/plugins/installed_plugins.json" 2>/dev/null | wc -l | tr -d ' ')
-
-    TOTAL_PLUGINS=$(jq -r '.plugins | length' "$HOME/.claude/plugins/installed_plugins.json" 2>/dev/null)
+if [ -f "$SETTINGS" ]; then
+    # Count ENABLED plugins from settings.json, not installed plugins
+    TOTAL_PLUGINS=$(jq -r '.enabledPlugins | length' "$SETTINGS" 2>/dev/null)
     PLUGIN_DISPLAY=" · 🔌 Plugins: $TOTAL_PLUGINS"
 
-    if [ "$HIGH_COST_PLUGINS" -gt 0 ]; then
-        # Prepend warning before the main output
-        echo "⚠️  WARNING: $HIGH_COST_PLUGINS high-cost plugin(s) active (adds 1000+ tokens/session)" >&2
+    # Check for high-cost plugins among enabled ones
+    if [ -f "$HOME/.claude/plugins/installed_plugins.json" ]; then
+        ENABLED_NAMES=$(jq -r '.enabledPlugins[]' "$SETTINGS" 2>/dev/null)
+        HIGH_COST_PLUGINS=0
+        while IFS= read -r plugin; do
+            if echo "$plugin" | grep -qE "output-style|ralph-wiggum"; then
+                ((HIGH_COST_PLUGINS++))
+            fi
+        done <<< "$ENABLED_NAMES"
+
+        if [ "$HIGH_COST_PLUGINS" -gt 0 ]; then
+            # Prepend warning before the main output
+            echo "⚠️  WARNING: $HIGH_COST_PLUGINS high-cost plugin(s) active (adds 1000+ tokens/session)" >&2
+        fi
     fi
 fi
 

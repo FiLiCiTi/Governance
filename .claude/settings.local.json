@@ -43,7 +43,8 @@
       "Bash(~/Desktop/Governance/scripts/suggest_model.sh:*)",
       "Bash(gh:*)",
       "Bash(env)",
-      "Bash(lsof:*)"
+      "Bash(lsof:*)",
+      "Bash(/Users/mohammadshehata/Desktop/Governance/scripts/sync_templates.sh:*)"
     ]
   }
 }
