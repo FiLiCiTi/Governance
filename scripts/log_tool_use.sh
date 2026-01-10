@@ -7,11 +7,13 @@
 # Check dependencies
 if ! command -v jq &> /dev/null; then
     # Silent fail - logging not critical, don't interrupt workflow
+    echo '{"decision": "approve"}'
     exit 0
 fi
 
 INPUT=$(cat)
 if [[ -z "$INPUT" ]]; then
+    echo '{"decision": "approve"}'
     exit 0  # No input, nothing to log
 fi
 
@@ -91,3 +93,6 @@ fi
 if [[ -f "$LOG_DIR/tool_use.log" ]]; then
     tail -10000 "$LOG_DIR/tool_use.log" > "$LOG_DIR/tool_use.log.tmp" && mv "$LOG_DIR/tool_use.log.tmp" "$LOG_DIR/tool_use.log"
 fi
+
+# PostToolUse hooks must output JSON with decision
+echo '{"decision": "approve"}'

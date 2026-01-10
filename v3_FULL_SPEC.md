@@ -1,7 +1,7 @@
 # Governance v3 Full Specification
 
 > **Version:** 3.0
-> **Date:** 2026-01-09
+> **Date:** 2026-01-10 (Updated)
 > **Status:** Complete
 > **Previous:** V2.5_FULL_SPEC.md
 
@@ -1270,6 +1270,100 @@ Projects can configure plugin behavior in `session_config.md`:
 ```
 
 Claude reads this config at session start and suggests plugin adjustments.
+
+### 10.7 Recommended Plugin Configuration Strategy
+
+**Problem**: Enabling all available plugins (41+) causes:
+- Multiple MCP server connection errors
+- High token overhead from plugin prompts
+- Slower session startup times
+- Unnecessary context consumption
+
+**Solution**: Curated plugin set based on actual usage
+
+**Governance v3 Default Configuration** (22 plugins):
+
+**Core governance tools** (4):
+- `commit-commands` - Git commit, push, PR workflows
+- `plugin-dev` - Plugin development and management
+- `hookify` - Hook rule creation and configuration
+- `github` - GitHub operations and PR management
+
+**Language intelligence** (10 LSP servers):
+- `typescript-lsp` - TypeScript/JavaScript
+- `pyright-lsp` - Python
+- `rust-analyzer-lsp` - Rust
+- `gopls-lsp` - Go
+- `php-lsp` - PHP
+- `jdtls-lsp` - Java
+- `csharp-lsp` - C#
+- `swift-lsp` - Swift
+- `lua-lsp` - Lua
+- `clangd-lsp` - C/C++
+
+**Development workflow** (6):
+- `feature-dev` - Guided feature development
+- `code-review` - Code review workflows
+- `pr-review-toolkit` - Comprehensive PR review
+- `agent-sdk-dev` - Claude Agent SDK development
+- `security-guidance` - Security best practices
+- `frontend-design` - UI/UX implementation
+
+**Specialized tools** (2):
+- `playwright` - Browser automation (no auth required)
+- `serena` - Research assistant (no auth required)
+
+**Disabled plugins** (rationale):
+
+**MCP servers requiring configuration/paid subscriptions**:
+- `figma` - Design integration (requires Figma Desktop MCP server enabled on port 3845)
+- `greptile` - Codebase search (requires GREPTILE_API_KEY + paid plan)
+- `context7` - Context management (requires Upstash account)
+- `laravel-boost` - Laravel-specific (only for Laravel projects)
+
+**Project management tools** (use when needed):
+- `atlassian`, `linear`, `asana`, `Notion` - Task management
+- `slack` - Team communication
+- `sentry`, `vercel`, `stripe`, `firebase`, `gitlab`, `supabase` - Service integrations
+
+**Configuration in settings.json**:
+```json
+"enabledPlugins": {
+  "commit-commands@claude-plugins-official": true,
+  "plugin-dev@claude-plugins-official": true,
+  "hookify@claude-plugins-official": true,
+  "github@claude-plugins-official": true,
+  "typescript-lsp@claude-plugins-official": true,
+  "pyright-lsp@claude-plugins-official": true,
+  "rust-analyzer-lsp@claude-plugins-official": true,
+  "gopls-lsp@claude-plugins-official": true,
+  "php-lsp@claude-plugins-official": true,
+  "jdtls-lsp@claude-plugins-official": true,
+  "csharp-lsp@claude-plugins-official": true,
+  "swift-lsp@claude-plugins-official": true,
+  "lua-lsp@claude-plugins-official": true,
+  "clangd-lsp@claude-plugins-official": true,
+  "feature-dev@claude-plugins-official": true,
+  "code-review@claude-plugins-official": true,
+  "pr-review-toolkit@claude-plugins-official": true,
+  "agent-sdk-dev@claude-plugins-official": true,
+  "security-guidance@claude-plugins-official": true,
+  "frontend-design@claude-plugins-official": true,
+  "playwright@claude-plugins-official": true,
+  "serena@claude-plugins-official": true
+}
+```
+
+**Impact**:
+- ✅ Eliminates MCP connection errors
+- ✅ Reduces token overhead
+- ✅ Faster session startup
+- ✅ Maintains all essential functionality
+
+**Per-project customization**:
+- Add project-specific tools to `session_config.md`
+- Enable service integrations only when actively used
+- Document plugin requirements in project CLAUDE.md
 
 ---------------------------------------------------------------------------------------------------------------------------
 

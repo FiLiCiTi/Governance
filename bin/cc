@@ -76,7 +76,7 @@ cat > "$STATE_FILE" << EOF
 EOF
 
 echo "┌────────────────────────────────────────────────────────────────┐"
-echo "│  Governance v2 Session Started                                 │"
+echo "│  Governance v3 Session Started                                 │"
 echo "├────────────────────────────────────────────────────────────────┤"
 echo "│  Recording: $LOG_FILE"
 echo "│  Project:   $PROJECT"

@@ -1,7 +1,7 @@
 # Context - Governance
 
 > **Type:** OPS
-> **Last updated:** 2026-01-09
+> **Last updated:** 2026-01-10
 > **Status:** Active
 
 ## I. Current State
@@ -17,7 +17,7 @@
 - Git: 1 commit, 75 files, 31,827 lines committed
 - GitHub: Public repository in FiLiCiTi organization
 
-**Last milestone**: GitHub repository created and initial commit pushed
+**Last milestone**: v3 system deployment fixes and plugin optimization complete
 
 **Current focus**: Short-term goals (migration guide, sync scripts, sample project)
 
@@ -34,6 +34,12 @@
 - GitHub repository created (FiLiCiTi/Governance) - 2026-01-09
 - Git remote setup with FiLiCiTi SSH configuration - 2026-01-09
 - Initial push to GitHub completed - 2026-01-09
+- Fixed hook paths (hooks/ → scripts/) in settings.json - 2026-01-10
+- Fixed v2 → v3 branding in bin/cc - 2026-01-10
+- Fixed PostToolUse hook errors (log_tool_use.sh missing JSON output) - 2026-01-10
+- Configured curated plugin set (23 plugins, down from 41) - 2026-01-10
+- Analyzed MCP server authentication requirements - 2026-01-10
+- Disabled Figma plugin (MCP server not configured) - 2026-01-10
 
 ### In Progress
 None
@@ -81,6 +87,11 @@ None
 | #G19 | 2026-01-09 | Move guides to /Ref/guides/                   | All references in one place      | Governance structure |
 | #G20 | 2026-01-09 | Merge hooks and scripts into /scripts/        | Simplify structure               | Governance structure |
 | #G21 | 2026-01-09 | Host Governance in FiLiCiTi organization      | Professional context, team access| GitHub repository    |
+| #G22 | 2026-01-10 | Curate plugins to 23 (from 41)                | Eliminate MCP errors, reduce overhead | Plugin performance |
+| #G23 | 2026-01-10 | Enable all LSP servers                        | Multi-language development support | Code intelligence  |
+| #G24 | 2026-01-10 | Enable core development tools                 | Feature dev, code review workflows | Development quality|
+| #G25 | 2026-01-10 | Enable auth-free specialized tools            | Playwright, Serena (no auth required) | Tool availability |
+| #G26 | 2026-01-10 | Disable Figma until MCP configured            | MCP server not running on port 3845 | Reduce MCP errors  |
 
 ### Architecture Notes
 
@@ -97,6 +108,14 @@ None
 - Version control: Git + GitHub (FiLiCiTi/Governance)
 - Templates: 10 standardized templates
 - CI/CD: gh CLI for PR workflows
+
+**Plugin configuration** (22 enabled):
+- Governance tools: commit-commands, plugin-dev, hookify, github
+- LSP servers (10): typescript, pyright, rust-analyzer, gopls, php, jdtls, csharp, swift, lua, clangd
+- Development tools (6): feature-dev, code-review, pr-review-toolkit, agent-sdk-dev, security-guidance, frontend-design
+- Specialized tools (2): playwright, serena (no auth required)
+- Disabled: figma (MCP server not configured), greptile, context7, laravel-boost (require paid subscriptions)
+- Disabled: All project management tools (atlassian, linear, asana, Notion, slack, sentry, vercel, stripe, firebase, gitlab, supabase)
 
 ## V. Blockers & Risks
 
@@ -119,6 +138,10 @@ None
 | 2026-01-09    | Unclear folder structure for v3              | Defined and implemented v3 structure    |
 | 2026-01-09    | FILICITI structure not documented in v3      | Added §18.G to v3 spec                  |
 | 2026-01-09    | Git repository not initialized               | Initialized git, created GitHub repo, pushed initial commit |
+| 2026-01-10    | Hook paths pointing to non-existent /hooks/  | Updated settings.json to use /scripts/  |
+| 2026-01-10    | PostToolUse hooks failing (Edit, TodoWrite)  | Added JSON output to log_tool_use.sh    |
+| 2026-01-10    | 7 MCP server errors on startup               | Disabled plugins requiring auth/subscriptions |
+| 2026-01-10    | Status bar showing ~0K (uncalibrated)        | Fixed log_tool_use.sh JSON output       |
 
 ## VI. Roadmap
 

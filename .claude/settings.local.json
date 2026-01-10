@@ -41,7 +41,9 @@
       "Bash(md5:*)",
       "Bash(tree:*)",
       "Bash(~/Desktop/Governance/scripts/suggest_model.sh:*)",
-      "Bash(gh:*)"
+      "Bash(gh:*)",
+      "Bash(env)",
+      "Bash(lsof:*)"
     ]
   }
 }
