@@ -119,6 +119,11 @@ tests/file.test.ts - [Description of change]
 
 ### For CODE Projects
 
+**Implementation progress**:
+- Active I-numbers: [I###, I###] (if using Code Documentation System)
+- Bugs encountered: [G###, G###] (if applicable)
+- Phase/Sprint: [Current phase and sprint status]
+
 **Technical debt identified**:
 - [Issue 1]
 - [Issue 2]
@@ -129,6 +134,11 @@ tests/file.test.ts - [Description of change]
 
 **Dependencies updated**:
 - [package]: [old version] → [new version]
+
+**Documentation updates** (if applicable):
+- ARCHITECTURE.md: [Section updated]
+- Implementation docs: [I###-*.md files created/updated]
+- Educational docs: [E###-*.md if created]
 
 ### For BIZZ Projects
 

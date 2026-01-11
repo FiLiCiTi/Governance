@@ -1,7 +1,7 @@
 # Governance v3 Full Specification
 
-> **Version:** 3.0
-> **Date:** 2026-01-10 (Updated)
+> **Version:** 3.1
+> **Date:** 2026-01-11 (Updated - Added Code Documentation System)
 > **Status:** Complete
 > **Previous:** V2.5_FULL_SPEC.md
 
@@ -21,12 +21,13 @@
 | 10      | [Plugin Integration](#10-plugin-integration)                                   | :1006  |
 | 11      | [Directory Intelligence](#11-directory-intelligence)                           | :1169  |
 | 12      | [Per-Product Setup](#12-per-product-setup)                                     | :1314  |
-| 13      | [Portfolio Management](#13-portfolio-management)                               | :1603  |
-| 14      | [Decision ID System](#14-decision-id-system)                                   | :1881  |
-| 15      | [Scripts & Tools](#15-scripts--tools)                                          | :2126  |
-| 16      | [Migration from v2.5](#16-migration-from-v25)                                  | :2604  |
-| 17      | [Quick Reference](#17-quick-reference)                                         | :3004  |
-| 18      | [Appendices](#18-appendices)                                                   | :3335  |
+| 13      | [Code Documentation System](#13-code-documentation-system)                     | :1788  |
+| 14      | [Portfolio Management](#14-portfolio-management)                               | :TBD   |
+| 15      | [Decision ID System](#15-decision-id-system)                                   | :TBD   |
+| 16      | [Scripts & Tools](#16-scripts--tools)                                          | :TBD   |
+| 17      | [Migration from v2.5](#17-migration-from-v25)                                  | :TBD   |
+| 18      | [Quick Reference](#18-quick-reference)                                         | :TBD   |
+| 19      | [Appendices](#19-appendices)                                                   | :TBD   |
 
 ---------------------------------------------------------------------------------------------------------------------------
 
@@ -296,7 +297,7 @@ Shared_context.md (portfolio level)
 ├── CLAUDE.md                    ← Layer 2: Global rules (v2.5)
 ├── Shared_context.md            ← Portfolio view (v3 NEW, optional)
 ├── templates/
-│   └── session_handoff.md       ← Global template
+│   └── session_handoff-TEMPLATE.md       ← Global template
 └── sessions/
     └── {hash}_session.json      ← Session state (hooks)
 ```
@@ -1470,7 +1471,7 @@ Claude: "I see this is a monorepo. Authentication should be:
 
 **Template** available at:
 ```
-~/Desktop/Governance/templates/CLAUDE_DIRECTORY_REFERENCE_TEMPLATE.md
+~/Desktop/Governance/templates/CLAUDE_DIRECTORY_REFERENCE-TEMPLATE.md
 ```
 
 ### 11.6 Updating Directory Reference
@@ -1530,7 +1531,7 @@ Per-product configuration allows projects to customize session handoff behavior 
 
 **If session_config.md exists**: Claude reads it at session start (after CLAUDE.md, before CONTEXT.md)
 
-**If session_config.md missing**: Claude uses global defaults from `~/.claude/templates/session_handoff.md`
+**If session_config.md missing**: Claude uses global defaults from `~/.claude/templates/session_handoff-TEMPLATE.md`
 
 ### 12.3 Configuration Structure
 
@@ -1702,7 +1703,7 @@ Claude reads this at session start and suggests plugin adjustments to user.
 **Layer priority** (highest to lowest):
 
 1. `{project}/.claude/session_config.md` (most specific)
-2. `~/.claude/templates/session_handoff.md` (global default)
+2. `~/.claude/templates/session_handoff-TEMPLATE.md` (global default)
 3. Built-in v3 template (fallback if no files exist)
 
 **Example**:
@@ -1743,7 +1744,7 @@ EOF
 
 **Template available at**:
 ```
-~/Desktop/Governance/templates/session_config_TEMPLATE.md
+~/Desktop/Governance/templates/session_config-TEMPLATE.md
 ```
 
 ### 12.9 Validating Configuration
@@ -1785,9 +1786,238 @@ Proceed with these settings? (User confirms)
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-## 13. Portfolio Management
+## 13. Code Documentation System
 
-### 13.1 Purpose
+### 13.1 Overview
+
+The Code Documentation System standardizes how CODE-type projects organize implementation documentation, enabling consistent structure across all coding projects.
+
+**Purpose:**
+- Standard directory structure for implementation docs
+- Clear naming conventions for features, bugs, tests, and lessons
+- Scalable from small features to large phases
+- Captures implementation journey and lessons learned
+
+**Applies to:** All CODE-type projects (fil-yuta, COEVOLVE, future projects)
+
+**Full specification:** `~/Desktop/Governance/templates/DOC_SYSTEM_CODE.md`
+
+### 13.2 Directory Structure
+
+```
+<project-root>/
+└── docs/
+    ├── specs/
+    │   ├── ARCHITECTURE.md (current design)
+    │   ├── DATA_MODEL.md
+    │   └── archive/ (old versions)
+    │
+    ├── implementation/
+    │   ├── active/I###-Feature/
+    │   │   ├── I###-Feature.md
+    │   │   ├── G###-Bug.md
+    │   │   ├── E###-Lesson.md
+    │   │   └── Q###-Tests.md
+    │   ├── completed/I###-Feature/
+    │   └── future/I###-Feature/
+    │
+    ├── educational/ (RARE - cross-project only)
+    │   └── E###-Pattern/
+    │
+    └── session_handoffs/
+        └── archive/YYYY/MM/
+```
+
+**Key principle:** Each I-number (implementation) has its own subdirectory containing all related documents (bugs, tests, lessons).
+
+### 13.3 Document Types
+
+| Type | Purpose | When to Create | Template |
+|------|---------|----------------|----------|
+| **I###** | Feature implementation (1-2 weeks) | Starting new feature/sprint | I###-TEMPLATE.md |
+| **G###** | Bug/glitch fix (any duration) | ANY bug discovered (always separate) | G###-TEMPLATE.md |
+| **E###** | Educational/lessons learned | User requests after repeated failures | E###-TEMPLATE.md |
+| **Q###** | QA/testing plan | Feature-specific testing needed | Q###-TEMPLATE.md |
+| **ARCHITECTURE** | Current system design | Once per project, update as needed | ARCHITECTURE_TEMPLATE.md |
+
+### 13.4 Naming Conventions
+
+**Implementation:**
+```
+I###-Feature-Name.md
+I021-RAG-Routing.md
+I014-Phase3-Testing.md
+```
+
+**Bugs/Glitches:**
+```
+G###-Bug-Title.md
+G021-Router-Logic.md
+G012-to-G016-Analyze-Fixes.md (grouped related bugs)
+```
+
+**Educational (tied to I-number):**
+```
+E###a-Topic.md
+E021-RAG-Debug-Guide.md (in I021-RAG-Routing/ folder)
+```
+
+**Educational (standalone, rare):**
+```
+E###-Topic.md
+E001-Git-Workflow.md (in educational/ folder)
+```
+
+**QA/Testing:**
+```
+Q###-Test-Scope.md
+Q021-Unit-Tests.md (matches I021)
+```
+
+### 13.5 Hierarchy & Terminology
+
+**Critical:** Avoid terminology confusion
+
+| Term | Duration | Location | Usage |
+|------|----------|----------|-------|
+| **Phase** | 2-3 months | ARCHITECTURE.md only | Major milestones |
+| **Sprint** | 2 weeks | ARCHITECTURE.md §8 | Time-boxed delivery |
+| **I-number** | 1-2 weeks | implementation/I###/ | Single feature unit |
+| **Implementation Stage** | 2-5 days | Inside I###.md | Backend, Frontend, Testing |
+| **Task** | Hours-days | Checkbox in I###.md | Atomic work unit |
+
+**Rule:** Use "Phase" only in ARCHITECTURE.md. In I###.md use descriptive headings: "Backend Implementation", "Frontend Implementation" (NOT "Phase 1", "Phase 2").
+
+### 13.6 Key Rules
+
+#### Always Create G### File
+- **Every bug gets separate G### file** (consistency)
+- Even 1-hour fixes (maintain history)
+- All debugging runs in ONE file (no G###-R1, G###-R2)
+
+#### E### Only When User Requests
+- **NOT automatic** - user explicitly asks
+- Triggered after 3+ failed debugging attempts
+- Captures reusable patterns, not one-off fixes
+
+#### Grouping Bugs
+Allow G### grouping when:
+1. Related (same component/root cause)
+2. Solved at same time (same day)
+3. Each took <3 days
+4. Score ≥3 points (see DOC_SYSTEM_CODE.md §8)
+
+Example: `G012-to-G016-Analyze-Fixes.md` (5 related bugs, fixed together)
+
+#### Cross-Cutting Testing = New I-number
+Phase-wide testing is NOT Q###, it's a new I-number:
+- `I014-Phase3-Testing/` (contains I014a-Coverage, I014b-Findings, G###)
+- Q### only for feature-specific testing
+
+### 13.7 File Relationships
+
+**Parent-child structure:**
+```
+I021-RAG-Routing/ (PARENT)
+├── I021-RAG-Routing.md
+├── G021-Router-Logic.md (CHILD - references I021)
+├── G022-Query-Processing.md (CHILD - references I021)
+├── E021-RAG-Debug-Guide.md (CHILD - references G021, G022)
+└── Q021-Unit-Tests.md (CHILD - references I021)
+```
+
+**All children reference parent in front matter:**
+```markdown
+# G021-Router-Logic.md
+> **Related:** I021-RAG-Routing (discovered during implementation)
+```
+
+### 13.8 Integration with v3 Governance
+
+**How Code Documentation System fits v3:**
+
+1. **CONTEXT.md** (v3 session continuity)
+   - References active I-numbers
+   - Tracks implementation progress
+   - Links to ARCHITECTURE.md
+
+2. **Session handoffs**
+   - Reference I-numbers worked on
+   - Link to G### bugs encountered
+   - Track phase/sprint progress
+
+3. **ARCHITECTURE.md** (specs/)
+   - Lists all phases with I-numbers
+   - Current sprint status
+   - Links to implementation/ folders
+
+4. **CLAUDE.md** (project rules)
+   - References DOC_SYSTEM_CODE.md
+   - Project-specific I###/G### conventions
+   - Links to specs/ARCHITECTURE.md
+
+### 13.9 Templates Available
+
+All templates in `~/Desktop/Governance/templates/`:
+
+| Template | Purpose | Key Sections |
+|----------|---------|--------------|
+| `ARCHITECTURE_TEMPLATE.md` | System design doc | Vision, phases, decisions, roadmap |
+| `I###-TEMPLATE.md` | Feature implementation | Requirements, design, progress, bugs |
+| `G###-TEMPLATE.md` | Bug fix documentation | Symptom, debugging runs, root cause, fix |
+| `E###-TEMPLATE.md` | Educational lessons | Context, problem, solution, case studies |
+| `Q###-TEMPLATE.md` | Testing plan | Test strategy, cases, coverage |
+| `DOC_SYSTEM_CODE.md` | Full system reference | Complete guidelines (12 sections) |
+
+### 13.10 Quick Start
+
+**For new CODE project:**
+
+1. Create directory structure:
+```bash
+mkdir -p docs/{specs,implementation/{active,completed,future},educational,session_handoffs}
+```
+
+2. Create ARCHITECTURE.md from template:
+```bash
+cp ~/Desktop/Governance/templates/ARCHITECTURE_TEMPLATE.md \
+   docs/specs/ARCHITECTURE.md
+```
+
+3. Start first implementation:
+```bash
+mkdir docs/implementation/active/I001-ProjectSetup
+cp ~/Desktop/Governance/templates/I###-TEMPLATE.md \
+   docs/implementation/active/I001-ProjectSetup/I001-ProjectSetup.md
+```
+
+4. Update project CLAUDE.md to reference documentation system
+
+**For existing CODE project:**
+
+1. Read DOC_SYSTEM_CODE.md thoroughly
+2. Plan migration strategy (keep existing docs in archive/)
+3. Adopt structure for new work going forward
+4. Gradually migrate important historical docs
+
+### 13.11 Decision IDs
+
+Code Documentation System introduces:
+
+| ID   | Decision                              | Rationale                          |
+|------|---------------------------------------|------------------------------------|
+| #D1  | Subdirectories by I-number            | Groups related docs, clean navigation |
+| #D2  | Always separate G### files            | Consistency, maintain history      |
+| #D3  | E### user-triggered only              | Prevents over-documentation        |
+| #D4  | Descriptive headings in I### (not "Phase") | Avoids terminology collision   |
+| #D5  | Cross-cutting testing = new I-number  | Testing is implementation work     |
+| #D6  | G### grouping allowed (with criteria) | Balance granularity vs clutter     |
+
+---------------------------------------------------------------------------------------------------------------------------
+
+## 14. Portfolio Management
+
+### 19.1 Purpose
 
 Portfolio management tracks progress across multiple projects using a global `Shared_context.md` file. This provides a unified view of all active work.
 
@@ -1798,7 +2028,7 @@ Portfolio management tracks progress across multiple projects using a global `Sh
 ├── CLAUDE.md                    ← Global rules (Layer 2)
 ├── Shared_context.md            ← Portfolio view (NEW in v3)
 ├── templates/
-│   └── session_handoff.md       ← Global template
+│   └── session_handoff-TEMPLATE.md       ← Global template
 └── sessions/
     └── {project_hash}_session.json
 ```
@@ -2038,13 +2268,13 @@ Claude performs:
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-## 14. Decision ID System
+## 15. Decision ID System
 
-### 14.1 Purpose
+### 19.1 Purpose
 
 Decision IDs provide permanent references to architectural decisions, security choices, and governance policies. This system is unchanged from v2.5 and carries forward to v3.
 
-### 14.2 ID Format
+### 19.2 ID Format
 
 **Structure**: `#[PREFIX][NUMBER]`
 
@@ -2067,7 +2297,7 @@ Decision IDs provide permanent references to architectural decisions, security c
 | `#U`   | UI/UX    | `#U7` - Material Design    |
 | `#T`   | Testing  | `#T3` - 80% coverage min   |
 
-### 14.3 Recording Decisions
+### 19.3 Recording Decisions
 
 **In CONTEXT.md** (Section IV: Decisions & Architecture):
 
@@ -2106,7 +2336,7 @@ Decision IDs provide permanent references to architectural decisions, security c
 - Implementation: Optional migration (see §16)
 ```
 
-### 14.4 Referencing Decisions
+### 19.4 Referencing Decisions
 
 **In code comments**:
 
@@ -2143,7 +2373,7 @@ git commit -m "feat: Add Backblaze backup integration (#I8)"
 - #S3 (2FA enforcement) - See docs/security.md
 ```
 
-### 14.5 Decision Lifecycle
+### 19.5 Decision Lifecycle
 
 **1. Proposal** (during session):
 ```
@@ -2184,7 +2414,7 @@ Claude: Creates new decision #I9 (supersedes #I8)
         Archives #I8 → status "Superseded by #I9"
 ```
 
-### 14.6 Decision Categories in v3
+### 19.6 Decision Categories in v3
 
 **Governance decisions** (affect session management):
 
@@ -2213,7 +2443,7 @@ Claude: Creates new decision #I9 (supersedes #I8)
 | #I16 | CONTEXT.md in project root          | Easy access for Layer 6        |
 | #I17 | Shared_context.md global            | Portfolio-level tracking       |
 
-### 14.7 Cross-Project Decision Tracking
+### 19.7 Cross-Project Decision Tracking
 
 **In Shared_context.md** (Section III):
 
@@ -2237,7 +2467,7 @@ Governance/CONTEXT.md:
 - #G12: Adopt v3 governance (affects all projects)
 ```
 
-### 14.8 Decision Search
+### 19.8 Decision Search
 
 **Find decisions by ID**:
 
@@ -2262,7 +2492,7 @@ grep "#G[0-9]" Governance/CONTEXT.md
 grep -r "#S[0-9]" ~/Desktop/*/CONTEXT.md
 ```
 
-### 14.9 Decision ID Best Practices
+### 19.9 Decision ID Best Practices
 
 **DO**:
 - Assign IDs immediately when decision is made
@@ -2279,15 +2509,15 @@ grep -r "#S[0-9]" ~/Desktop/*/CONTEXT.md
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-## 15. Scripts & Tools
+## 16. Scripts & Tools
 
-### 15.1 Available Scripts
+### 19.1 Available Scripts
 
 Scripts from v2.5 (unchanged) plus new v3-specific tools for session management.
 
 **Location**: `~/Desktop/Governance/scripts/`
 
-### 15.2 v2.5 Scripts (Carry Forward)
+### 19.2 v2.5 Scripts (Carry Forward)
 
 **Governance setup**:
 ```bash
@@ -2306,11 +2536,11 @@ Scripts from v2.5 (unchanged) plus new v3-specific tools for session management.
 - Creates `_governance/` folders with symlinks
 - Links to central Governance hub
 
-### 15.3 v3 Session Management Scripts
+### 19.3 v3 Session Management Scripts
 
 **New scripts** for v3 workflows:
 
-#### 15.3.1 create_session_handoff.sh
+#### 19.3.1 create_session_handoff.sh
 
 **Purpose**: Initialize session handoff file at session start
 
@@ -2323,11 +2553,11 @@ cd {project}
 **What it does**:
 1. Creates `session_handoffs/` directory if missing
 2. Generates filename: `YYYYMMDD_HHMM_feature-name.md`
-3. Copies template from `~/.claude/templates/session_handoff.md`
+3. Copies template from `~/.claude/templates/session_handoff-TEMPLATE.md`
 4. Fills Section I (Metadata) automatically
 5. Leaves other sections empty for Claude to fill
 
-#### 15.3.2 checkpoint_session.sh
+#### 19.3.2 checkpoint_session.sh
 
 **Purpose**: Save checkpoint (handoff + CONTEXT + git commit)
 
@@ -2349,7 +2579,7 @@ cd {project}
 - Create new handoff file (uses current)
 - Run tests or linting (optional per project)
 
-#### 15.3.3 finalize_session.sh
+#### 19.3.3 finalize_session.sh
 
 **Purpose**: Complete session handoff and mark immutable
 
@@ -2366,7 +2596,7 @@ cd {project}
 4. Commits: `git commit -m "Session finalized: [date]"`
 5. Outputs summary of session
 
-#### 15.3.4 archive_sessions.sh
+#### 19.3.4 archive_sessions.sh
 
 **Purpose**: Move old session handoffs to archive (monthly)
 
@@ -2383,29 +2613,58 @@ cd {project}
 4. Creates fresh `CONTEXT.md` from template
 5. Commits: `git commit -m "Archive: Session handoffs for 2025-12"`
 
-### 15.4 Template Management Scripts
+### 19.4 Template Management
 
-#### 15.4.1 sync_templates.sh
+#### 19.4.1 Template Development & Publishing Workflow
 
-**Purpose**: Copy latest templates from Governance to global location
+**Two-stage workflow**:
 
-**Usage**:
-```bash
-~/Desktop/Governance/scripts/sync_templates.sh
+```
+~/Desktop/Governance/templates/        ~/.claude/templates/
+(Development/Staging)                  (Production/Single Source of Truth)
+     |                                        ↑
+     |  1. Create/update templates           |
+     |  2. Test & refine                     |
+     |  3. When stable ------- publish ------→|
+                                              |
+                                              ↓
+                               All projects read from here
 ```
 
-**What it does**:
-1. Copies `templates/session_handoff.md` → `~/.claude/templates/`
-2. Copies `templates/TEMPLATE_*.md` → `~/.claude/templates/`
-3. Verifies file integrity (checksums)
-4. Outputs summary of synced files
+**Published templates** (in `~/.claude/templates/`):
+- `session_handoff-TEMPLATE.md` - Session handoff structure (12 sections)
+- `CONTEXT-TEMPLATE.md` - Project state file (7 sections)
+- `Shared_context-TEMPLATE.md` - Portfolio tracking (7 sections)
+- `session_config-TEMPLATE.md` - Per-project configuration
+- `CLAUDE_DIRECTORY_REFERENCE-TEMPLATE.md` - Directory intelligence template
+- `CLAUDEMD_CODE-TEMPLATE.md` - CLAUDE.md for CODE projects
+- `CLAUDEMD_BIZZ-TEMPLATE.md` - CLAUDE.md for BIZZ projects
+- `CLAUDEMD_OPS-TEMPLATE.md` - CLAUDE.md for OPS projects
+- `CLAUDEMD_ROOT-TEMPLATE.md` - CLAUDE.md for root directories
+- `ARCHITECTURE_TEMPLATE.md` - Code project architecture doc
+- `I###-TEMPLATE.md` - Feature implementation doc
+- `G###-TEMPLATE.md` - Bug/glitch fix doc
+- `E###-TEMPLATE.md` - Educational/lessons learned doc
+- `Q###-TEMPLATE.md` - QA/testing plan doc
+- `DOC_SYSTEM_CODE.md` - Code Documentation System reference guide
+- `L3_GLOBAL.md` - Layer 3 global rules
 
-**When to run**:
-- After updating templates in Governance
-- Before starting new project
-- Monthly (to ensure latest versions)
+**Publishing process** (manual):
+```bash
+# After testing templates in Governance, publish to global location:
+cp ~/Desktop/Governance/templates/*.md ~/.claude/templates/
 
-#### 15.4.2 validate_project.sh
+# Verify:
+ls -1 ~/.claude/templates/ | wc -l  # Should show 16 templates
+```
+
+**When to publish**:
+- After creating new templates in Governance
+- After updating existing templates (bug fixes, improvements)
+- After testing templates in real projects (coevolve, fil-yuta, fil-app)
+- Before starting new projects (ensure they use latest versions)
+
+#### 19.4.2 validate_project.sh
 
 **Purpose**: Check project compliance with v3 requirements
 
@@ -2436,9 +2695,9 @@ Project validation: MyWebApp
 Compliance: 4/6 checks passed
 ```
 
-### 15.5 Utility Scripts
+### 19.5 Utility Scripts
 
-#### 15.5.1 session_summary.sh
+#### 19.5.1 session_summary.sh
 
 **Purpose**: Generate summary of all sessions for a project
 
@@ -2450,7 +2709,7 @@ cd {project}
 
 **Output**: Total sessions, date range, work time, completed work, decisions, recent sessions, next priority
 
-#### 15.5.2 context_health.sh
+#### 19.5.2 context_health.sh
 
 **Purpose**: Check CONTEXT.md freshness and identify stale projects
 
@@ -2461,7 +2720,7 @@ cd {project}
 
 **Output**: Fresh projects (<7 days), stale projects (7-30 days), inactive projects (>30 days), recommendations
 
-### 15.6 Script Installation
+### 19.6 Script Installation
 
 **Setup** (one-time):
 
@@ -2477,7 +2736,7 @@ echo 'export PATH="$PATH:~/Desktop/Governance/scripts"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-### 15.7 Script Customization
+### 19.7 Script Customization
 
 **Per-project overrides** (optional):
 
@@ -2498,13 +2757,13 @@ Create `{project}/.claude/scripts/` to override global scripts:
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-## 16. Migration from v2.5
+## 17. Migration from v2.5
 
-### 16.1 Migration Philosophy
+### 19.1 Migration Philosophy
 
 v3 is **opt-in**. Existing v2.5 projects continue working without changes. Migration adds session continuity features but is not required.
 
-### 16.2 Who Should Migrate
+### 19.2 Who Should Migrate
 
 **Migrate to v3 if**:
 - Long-running projects (>90min sessions common)
@@ -2521,7 +2780,7 @@ v3 is **opt-in**. Existing v2.5 projects continue working without changes. Migra
 
 **Both work**: v2.5 and v3 projects can coexist. No forced upgrades.
 
-### 16.3 Pre-Migration Checklist
+### 19.3 Pre-Migration Checklist
 
 **Before migrating**:
 
@@ -2537,7 +2796,7 @@ v3 is **opt-in**. Existing v2.5 projects continue working without changes. Migra
 - Layer 1-5 unchanged
 - Plugins work identically
 
-### 16.4 Migration Steps
+### 19.4 Migration Steps
 
 #### Step 1: Create CONTEXT.md
 
@@ -2655,7 +2914,7 @@ git commit -m "Migration: Add session config (#G15)"
 **Verify**:
 ```bash
 ls ~/.claude/templates/
-# Should show: session_handoff.md, TEMPLATE_CODE.md, etc.
+# Should show: session_handoff-TEMPLATE.md, CLAUDEMD_CODE-TEMPLATE.md, etc.
 ```
 
 #### Step 5: Validate Migration
@@ -2695,7 +2954,7 @@ User: "finalize session handoff"
 Claude fills all sections + marks immutable
 ```
 
-### 16.5 Rollback (If Needed)
+### 19.5 Rollback (If Needed)
 
 **If v3 doesn't work for you**:
 
@@ -2715,7 +2974,7 @@ git reset --hard HEAD~3
 
 **Continue using v2.5**: CLAUDE.md, hooks, plugins, Layer 1-5 unchanged.
 
-### 16.6 Partial Migration
+### 19.6 Partial Migration
 
 **Migrate only some projects**:
 
@@ -2732,7 +2991,7 @@ Projects:
 - v2.5 projects have only CLAUDE.md
 - Shared_context.md can track both types
 
-### 16.7 Migrating Decision History
+### 19.7 Migrating Decision History
 
 **Carry forward past decisions** to CONTEXT.md:
 
@@ -2754,7 +3013,7 @@ Projects:
 
 Not required but helpful for continuity.
 
-### 16.8 Migration Timeline
+### 19.8 Migration Timeline
 
 **Suggested approach**:
 
@@ -2782,7 +3041,7 @@ Week 4: Create Shared_context.md
 
 No deadline. Migrate at your own pace.
 
-### 16.9 Common Migration Issues
+### 19.9 Common Migration Issues
 
 **Issue**: "CONTEXT.md too much work to fill initially"
 **Solution**: Start minimal (Section I only, fill rest during sessions)
@@ -2801,13 +3060,13 @@ No deadline. Migrate at your own pace.
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-## 17. Quick Reference
+## 18. Quick Reference
 
-### 17.1 v3 Workflows
+### 19.1 v3 Workflows
 
 Quick reference cards for common v3 operations.
 
-#### 17.1.1 Session Start Workflow
+#### 19.1.1 Session Start Workflow
 
 ```
 ┌─────────────────────────────────────┐
@@ -2835,7 +3094,7 @@ Quick reference cards for common v3 operations.
 
 **Files touched**: session_handoffs/YYYYMMDD_HHMM_topic.md (created), CONTEXT.md (read only)
 
-#### 17.1.2 Checkpoint Workflow
+#### 19.1.2 Checkpoint Workflow
 
 ```
 ┌─────────────────────────────────────┐
@@ -2869,7 +3128,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 
 **Files touched**: session_handoffs/YYYYMMDD_HHMM_topic.md (updated), CONTEXT.md (updated), code files (committed)
 
-#### 17.1.3 Finalize Session Workflow
+#### 19.1.3 Finalize Session Workflow
 
 ```
 ┌─────────────────────────────────────┐
@@ -2894,7 +3153,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 
 **Files touched**: session_handoffs/YYYYMMDD_HHMM_topic.md (finalized), CONTEXT.md (updated)
 
-#### 17.1.4 Monthly Archive Workflow
+#### 19.1.4 Monthly Archive Workflow
 
 ```
 ┌─────────────────────────────────────┐
@@ -2917,7 +3176,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 
 **Files touched**: session_handoffs/YYYYMM*.md (moved), archive/YYYY/MM/CONTEXT_YYYYMM.md (created), CONTEXT.md (reset)
 
-### 17.2 File Locations Quick Reference
+### 19.2 File Locations Quick Reference
 
 **Per-project**:
 ```
@@ -2935,11 +3194,11 @@ Trigger: Warmup status shows ⚠️ or 🔴
 ~/.claude/
 ├── CLAUDE.md                    ← Layer 2
 ├── Shared_context.md            ← Portfolio
-├── templates/session_handoff.md
+├── templates/session_handoff-TEMPLATE.md
 └── sessions/{hash}_session.json
 ```
 
-### 17.3 Command Quick Reference
+### 19.3 Command Quick Reference
 
 | Task           | User Command                     | Claude Action                                |
 |----------------|----------------------------------|---------------------------------------------|
@@ -2950,7 +3209,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 | Archive        | "archive last month"             | Move old handoffs to archive/               |
 | Recover        | "recover from checkpoint"        | Read CONTEXT + latest handoff               |
 
-### 17.4 Decision ID Quick Reference
+### 19.4 Decision ID Quick Reference
 
 | Prefix | Category       | Example                  |
 |--------|----------------|--------------------------|
@@ -2960,7 +3219,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 | `#S`   | Security       | #S3 - Enforce 2FA        |
 | `#B`   | Backup         | #B1 - 3-2-1 strategy     |
 
-### 17.5 Warmup Status Quick Reference
+### 19.5 Warmup Status Quick Reference
 
 | Icon | Token Age | Meaning        | Action                   |
 |------|-----------|----------------|--------------------------|
@@ -2968,7 +3227,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 | ⚠️   | 240-480m  | Aging context  | Checkpoint recommended   |
 | 🔴   | >480m     | Stale context  | Checkpoint required      |
 
-### 17.6 Layer System Quick Reference
+### 19.6 Layer System Quick Reference
 
 | #  | Layer                 | When Loaded   | Source                       |
 |----|-----------------------|---------------|------------------------------|
@@ -2983,7 +3242,7 @@ Trigger: Warmup status shows ⚠️ or 🔴
 | 9  | Tool results          | After tool use| File contents, outputs       |
 | 10 | Current message       | Per message   | User's current request       |
 
-### 17.7 Migration Quick Reference
+### 19.7 Migration Quick Reference
 
 **Minimal v3 migration** (required files):
 1. Create CONTEXT.md
@@ -3003,11 +3262,11 @@ git revert [migration commits]
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-## 18. Appendices
+## 19. Appendices
 
-### 18.A Full Session Handoff Template
+### 19.A Full Session Handoff Template
 
-**File**: `~/.claude/templates/session_handoff.md`
+**File**: `~/.claude/templates/session_handoff-TEMPLATE.md`
 
 See §6.2 for full 12-section template structure. Template includes:
 - Section I: Session Metadata (auto-filled)
@@ -3023,7 +3282,7 @@ See §6.2 for full 12-section template structure. Template includes:
 - Section XI: Handoff Notes (for next Claude)
 - Section XII: Appendix (optional)
 
-### 18.B Full CONTEXT.md Template
+### 19.B Full CONTEXT.md Template
 
 **File**: `{project}/CONTEXT.md`
 
@@ -3036,7 +3295,7 @@ See §6.2 for full 12-section template structure. Template includes:
 - Section VI: Roadmap (immediate/short-term/long-term)
 - Section VII: Session History (last 10 sessions)
 
-### 18.C Full Shared_context.md Template
+### 19.C Full Shared_context.md Template
 
 **File**: `~/.claude/Shared_context.md`
 
@@ -3049,7 +3308,7 @@ See §6.2 for full 12-section template structure. Template includes:
 - Section VI: Portfolio Metrics (sessions, context health, archive size)
 - Section VII: Notes (relationships, changes, health)
 
-### 18.D Example session_config.md (CODE Project)
+### 19.D Example session_config.md (CODE Project)
 
 Custom configuration showing:
 - YAML frontmatter (project_type, checkpoint_interval)
@@ -3060,7 +3319,7 @@ Custom configuration showing:
 - Environment variables
 - Troubleshooting (common issues)
 
-### 18.E FAQ
+### 19.E FAQ
 
 **General Questions**:
 - Q: Do I need to migrate to v3? A: No. v3 is opt-in.
@@ -3084,7 +3343,7 @@ Custom configuration showing:
 - Q: Where does Shared_context.md go? A: ~/.claude/
 
 **Template Questions**:
-- Q: Can I modify template? A: Yes. Edit ~/.claude/templates/session_handoff.md.
+- Q: Can I modify template? A: Yes. Edit ~/.claude/templates/session_handoff-TEMPLATE.md.
 - Q: Different templates per project? A: Yes. Use session_config.md overrides.
 - Q: Sync template changes? A: Run ~/Desktop/Governance/scripts/sync_templates.sh.
 
@@ -3113,7 +3372,7 @@ Custom configuration showing:
 - Q: Update frequency? A: After milestones or monthly.
 - Q: Auto-aggregate? A: No. Manual updates.
 
-### 18.F Glossary
+### 19.F Glossary
 
 | Term                | Definition                                                                |
 |---------------------|---------------------------------------------------------------------------|
@@ -3131,7 +3390,7 @@ Custom configuration showing:
 | v2.5                | Previous governance version (9-layer system, no session continuity)       |
 | v3                  | Current governance version (10-layer system with session handoffs)        |
 
-### 18.G FILICITI Folder Structure (v1 Reference)
+### 19.G FILICITI Folder Structure (v1 Reference)
 
 **Complete folder structure from v1 governance** (for reference when setting up multi-product portfolios):
 

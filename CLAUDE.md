@@ -14,7 +14,7 @@
 
 ## Links
 
-- Full spec: `V2.5_FULL_SPEC.md`
+- Full spec: `v3_FULL_SPEC.md`
 - Claude Code docs: `CLAUDE_CODE_DOCS.md`
 - Plugin reference: `CLAUDE_PLUGINS_REFERENCE.md`
 - Directory reference: `CLAUDE_DIRECTORY_REFERENCE_v2.md`
