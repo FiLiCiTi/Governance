@@ -11,13 +11,14 @@
 **Progress**: Completed v3 Full Specification with session continuity features. Reorganized folder structure for v3 compliance. Git repository initialized and pushed to GitHub.
 
 **Key metrics**:
-- v3 spec: 3,140 lines (18 sections)
+- v3 spec: 3,236 lines (18 sections)
 - Templates: 10 templates created
 - Archive: v1, v2, v2.5 organized
-- Git: 1 commit, 75 files, 31,827 lines committed
-- GitHub: Public repository in FiLiCiTi organization
+- Git: 4 commits, 79 files
+- GitHub: Public repository in FiLiCiTi organization with topics
+- Decisions: 19 total (#G12-#G30)
 
-**Last milestone**: v3 system deployment fixes and plugin optimization complete
+**Last milestone**: v3 tools created (sync_templates.sh), BUG 3 identified (session state not resetting)
 
 **Current focus**: Short-term goals (migration guide, sync scripts, sample project)
 
@@ -40,14 +41,24 @@
 - Configured curated plugin set (23 plugins, down from 41) - 2026-01-10
 - Analyzed MCP server authentication requirements - 2026-01-10
 - Disabled Figma plugin (MCP server not configured) - 2026-01-10
+- Attempted BUG 1 fix: Plugin count display (NOT FIXED - still shows issues) - 2026-01-10
+- Attempted BUG 2 fix: State file initialization (NOT FIXED - still shows "~0K", crazy warmup) - 2026-01-10
+- Created sync_templates.sh script (push/pull/check modes) - 2026-01-10
+- Configured GitHub repository topics (claude-code, governance, ai-development, session-management) - 2026-01-10
+- Context calibration completed (3 calibrations, factor: 1.0662x) - 2026-01-10
+- Pushed 2 commits to GitHub (2ca0fe0, cca2d71) - 2026-01-10
+- Added session handoff to repository - 2026-01-10
+- Identified BUG 3: Root cause of status display issues (inject_context.sh:46-56) - 2026-01-10
 
 ### In Progress
 None
 
 ### Pending
-- Document v3 migration guide
-- Create sync_templates.sh script
+- Fix BUG 3: State file session reset (inject_context.sh:46-56, use = instead of //=)
 - Test v3 workflows on sample project
+- Establish monthly archival process
+- Create README.md for GitHub repository
+- Document v3 migration guide
 
 ## III. Active Work
 
@@ -92,11 +103,15 @@ None
 | #G24 | 2026-01-10 | Enable core development tools                 | Feature dev, code review workflows | Development quality|
 | #G25 | 2026-01-10 | Enable auth-free specialized tools            | Playwright, Serena (no auth required) | Tool availability |
 | #G26 | 2026-01-10 | Disable Figma until MCP configured            | MCP server not running on port 3845 | Reduce MCP errors  |
+| #G27 | 2026-01-10 | Count enabled plugins, not installed (REVERTED) | Plugin count fix didn't work | Investigation needed |
+| #G28 | 2026-01-10 | Initialize state file at session start (INCOMPLETE) | Fix didn't work, BUG 3 identified | Needs proper fix |
+| #G29 | 2026-01-10 | Create sync_templates.sh for drift prevention | Templates exist in 2 locations | Template consistency |
+| #G30 | 2026-01-10 | Migrate active projects to v3 | Completed via other project setups | Cross-project consistency |
 
 ### Architecture Notes
 
 **Governance v3 structure**:
-- Templates in: ~/Desktop/Governance/templates/ AND ~/.claude/templates/
+- Templates in: ~/Desktop/Governance/templates/ AND ~/.claude/templates/ (synced via sync_templates.sh)
 - Reference docs: ~/Desktop/Governance/Ref/
 - Archives: ~/Desktop/Governance/archive/ (v1, v2, v2.5, sessions)
 - Scripts: ~/Desktop/Governance/scripts/ (hooks + scripts merged)
@@ -104,10 +119,11 @@ None
 
 **Tech stack**:
 - Documentation: Markdown
-- Automation: Bash scripts
+- Automation: Bash scripts (inject_context.sh, log_tool_use.sh, sync_templates.sh, etc.)
 - Version control: Git + GitHub (FiLiCiTi/Governance)
 - Templates: 10 standardized templates
 - CI/CD: gh CLI for PR workflows
+- GitHub topics: claude-code, governance, ai-development, session-management
 
 **Plugin configuration** (22 enabled):
 - Governance tools: commit-commands, plugin-dev, hookify, github
@@ -121,7 +137,12 @@ None
 
 ### Current Blockers
 
-None
+**BUG 3**: Session state not resetting at startup
+- Location: scripts/inject_context.sh:46-56
+- Symptom: Status bar shows "~0K (uncalibrated)" and "🔴 Warmup: 29468441m"
+- Root cause: Using //= operator only updates null/missing fields, not fields with value 0
+- Fix: Change lines 52-54 from `.last_warmup //= $now` to `.last_warmup = $now` (same for start_time, token_count)
+- Impact: Status bar shows incorrect data until first tool use updates state file
 
 ### Risks
 
@@ -146,11 +167,11 @@ None
 ## VI. Roadmap
 
 ### Immediate Next Steps
-1. Document v3 migration guide
-2. Create sync_templates.sh script
-3. Test v3 workflows on a sample project
-4. Create session handoff for this session
-5. Update Shared_context.md with git milestone
+1. Fix BUG 3 in inject_context.sh (change //= to = for session fields)
+2. Test fix in new session to verify status bar works correctly
+3. Document v3 migration guide
+4. Test v3 workflows on a sample project
+5. Create README.md for GitHub repository
 
 ### Short-term Goals (This Month)
 - Add README.md to GitHub repository
