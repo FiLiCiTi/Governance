@@ -155,13 +155,13 @@ elif [[ $CONTEXT_PCT -ge 70 ]]; then
     CONTEXT_INDICATOR="🟡"
 fi
 
-# Format context display (v2.5.1: show calibration status)
+# Format context display (v2.5.2: shortened calibration status)
 CALIBRATED_K=$((CALIBRATED_TOKENS / 1000))
 # Check if calibration was ever done (last_calibration exists and > 0)
 if [[ "$LAST_CALIBRATION" != "0" && "$LAST_CALIBRATION" != "null" && -n "$LAST_CALIBRATION" ]]; then
-    CONTEXT_DISPLAY="${CONTEXT_INDICATOR} Context: ~${CALIBRATED_K}K (calibrated)"
+    CONTEXT_DISPLAY="${CONTEXT_INDICATOR} Context: ~${CALIBRATED_K}K"
 else
-    CONTEXT_DISPLAY="${CONTEXT_INDICATOR} Context: ~${CALIBRATED_K}K (uncalibrated)"
+    CONTEXT_DISPLAY="${CONTEXT_INDICATOR} Context: ~${CALIBRATED_K}K*"
 fi
 
 # Check if calibration reminder needed (every 30 min)
@@ -173,12 +173,21 @@ if [[ $CALIBRATION_ELAPSED -ge $CALIBRATION_INTERVAL ]]; then
 fi
 
 # ============================================================
-# SECTION 6: Warmup Timer (v2.5.1: threshold-based colors)
+# SECTION 6: Warmup Timer (v2.5.2: activity-based refresh)
 # ============================================================
 LAST_WARMUP=$(jq -r '.last_warmup // 0' "$STATE_FILE" 2>/dev/null)
-WARMUP_ELAPSED=$(((NOW - LAST_WARMUP) / 60))
+LAST_UPDATE=$(jq -r '.last_update // 0' "$STATE_FILE" 2>/dev/null)
 
-# v2.5.1: Threshold-based warmup status
+# Use most recent activity (last_update) if more recent than last_warmup
+# This keeps warmup fresh during active sessions
+if [[ "$LAST_UPDATE" -gt "$LAST_WARMUP" ]]; then
+    WARMUP_REF=$LAST_UPDATE
+else
+    WARMUP_REF=$LAST_WARMUP
+fi
+WARMUP_ELAPSED=$(((NOW - WARMUP_REF) / 60))
+
+# v2.5.2: Threshold-based warmup status (refreshed by activity)
 # ✅ <240m (4h) = Ready, ⚠️ 240-480m (4-8h) = Stale, 🔴 >480m (8h) = Cold
 if [[ $WARMUP_ELAPSED -ge 480 ]]; then
     WARMUP_DISPLAY="🔴 Warmup: ${WARMUP_ELAPSED}m"
@@ -248,24 +257,37 @@ else
 fi
 
 # ============================================================
-# SECTION 8: Active Plugins Detection (v2.5.1)
+# SECTION 8: Last Tool Used (v2.5.2: replaced active plugins)
 # ============================================================
-ACTIVE_PLUGINS="none"
-PLUGIN_FILE="$HOME/.claude/active_plugin"
+LAST_TOOL="--"
+TOOL_FILE="$HOME/.claude/last_tool_name"
+TOOL_TIME_FILE="$HOME/.claude/last_tool_time"
 
-# Check if any automatic plugin is currently running
-# (This file is updated by PreToolUse hooks when plugins execute)
-if [[ -f "$PLUGIN_FILE" ]]; then
-    PLUGIN_CONTENT=$(cat "$PLUGIN_FILE" 2>/dev/null)
-    if [[ -n "$PLUGIN_CONTENT" && "$PLUGIN_CONTENT" != "none" ]]; then
-        ACTIVE_PLUGINS="$PLUGIN_CONTENT"
+# Show last tool used (updated by log_tool_use.sh PostToolUse hook)
+if [[ -f "$TOOL_FILE" ]]; then
+    TOOL_NAME=$(cat "$TOOL_FILE" 2>/dev/null)
+    if [[ -n "$TOOL_NAME" ]]; then
+        # Check if tool use was recent (within 5 minutes)
+        if [[ -f "$TOOL_TIME_FILE" ]]; then
+            TOOL_TIME=$(cat "$TOOL_TIME_FILE" 2>/dev/null)
+            TOOL_AGE=$((NOW - TOOL_TIME))
+            if [[ $TOOL_AGE -lt 300 ]]; then
+                LAST_TOOL="$TOOL_NAME"
+            else
+                LAST_TOOL="--"
+            fi
+        fi
     fi
 fi
 
 # ============================================================
-# SECTION 9: Format Output (v2.5.1 Simplified)
+# SECTION 9: Format Output (v2.5.2 Simplified)
 # ============================================================
-# v2.5.1: Only Context, Warmup, Active Plugins with centered dots
+# v2.5.2: Context, Warmup, Last Tool (if recent)
 
 # Final status line (simplified)
-echo "$CONTEXT_DISPLAY · $WARMUP_DISPLAY · 🔌 Active Plugins: $ACTIVE_PLUGINS"
+if [[ "$LAST_TOOL" != "--" ]]; then
+    echo "$CONTEXT_DISPLAY · $WARMUP_DISPLAY · 🔧 $LAST_TOOL"
+else
+    echo "$CONTEXT_DISPLAY · $WARMUP_DISPLAY"
+fi

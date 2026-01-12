@@ -1,26 +1,27 @@
 # Context - Governance
 
 > **Type:** OPS
-> **Last updated:** 2026-01-10
+> **Last updated:** 2026-01-11
 > **Status:** Active
 
 ## I. Current State
 
 **Phase**: Development
 
-**Progress**: Completed v3 Full Specification with session continuity features. Reorganized folder structure for v3 compliance. Git repository initialized and pushed to GitHub.
+**Progress**: Completed v3.1 Full Specification with Code Documentation System. All templates standardized and published to global location. Template development workflow established.
 
 **Key metrics**:
-- v3 spec: 3,236 lines (18 sections)
-- Templates: 10 templates created
+- v3 spec: 3,400+ lines (18 sections)
+- Templates: 16 templates published (standardized naming)
 - Archive: v1, v2, v2.5 organized
-- Git: 4 commits, 79 files
+- Git: 6 commits, 95 files
 - GitHub: Public repository in FiLiCiTi organization with topics
 - Decisions: 19 total (#G12-#G30)
+- Code Doc System: I###, G###, E###, Q### templates ready
 
-**Last milestone**: v3 tools created (sync_templates.sh), BUG 3 identified (session state not resetting)
+**Last milestone**: Code Documentation System v3.1 published, all templates standardized with `-TEMPLATE.md` suffix
 
-**Current focus**: Short-term goals (migration guide, sync scripts, sample project)
+**Current focus**: Monitor template usage across CODE projects, collect feedback, refine based on real-world use
 
 ## II. Progress Summary
 
@@ -49,16 +50,21 @@
 - Pushed 2 commits to GitHub (2ca0fe0, cca2d71) - 2026-01-10
 - Added session handoff to repository - 2026-01-10
 - Identified BUG 3: Root cause of status display issues (inject_context.sh:46-56) - 2026-01-10
+- Standardized all template naming to `-TEMPLATE.md` suffix (16 templates) - 2026-01-11
+- Published Code Documentation System v3.1 templates to ~/.claude/templates/ - 2026-01-11
+- Updated v3_FULL_SPEC.md with template development workflow (§19.4.1) - 2026-01-11
+- Generalized session handoff next steps (not project-specific) - 2026-01-11
+- Committed and pushed template standardization (fc977e0) - 2026-01-11
 
 ### In Progress
 None
 
 ### Pending
+- Monitor Code Documentation System usage across CODE projects (coevolve, fil-yuta, fil-app)
+- Collect feedback on template effectiveness after 1 month
 - Fix BUG 3: State file session reset (inject_context.sh:46-56, use = instead of //=)
-- Test v3 workflows on sample project
 - Establish monthly archival process
 - Create README.md for GitHub repository
-- Document v3 migration guide
 
 ## III. Active Work
 
@@ -110,8 +116,10 @@ None
 
 ### Architecture Notes
 
-**Governance v3 structure**:
-- Templates in: ~/Desktop/Governance/templates/ AND ~/.claude/templates/ (synced via sync_templates.sh)
+**Governance v3.1 structure**:
+- Templates: Two-stage workflow
+  - Development: ~/Desktop/Governance/templates/ (16 templates)
+  - Production: ~/.claude/templates/ (single source of truth for all projects)
 - Reference docs: ~/Desktop/Governance/Ref/
 - Archives: ~/Desktop/Governance/archive/ (v1, v2, v2.5, sessions)
 - Scripts: ~/Desktop/Governance/scripts/ (hooks + scripts merged)
@@ -119,9 +127,10 @@ None
 
 **Tech stack**:
 - Documentation: Markdown
-- Automation: Bash scripts (inject_context.sh, log_tool_use.sh, sync_templates.sh, etc.)
+- Automation: Bash scripts (inject_context.sh, log_tool_use.sh, etc.)
 - Version control: Git + GitHub (FiLiCiTi/Governance)
-- Templates: 10 standardized templates
+- Templates: 16 standardized templates with `-TEMPLATE.md` suffix
+- Code Documentation System: I###, G###, E###, Q### templates + ARCHITECTURE
 - CI/CD: gh CLI for PR workflows
 - GitHub topics: claude-code, governance, ai-development, session-management
 
@@ -167,22 +176,23 @@ None
 ## VI. Roadmap
 
 ### Immediate Next Steps
-1. Fix BUG 3 in inject_context.sh (change //= to = for session fields)
-2. Test fix in new session to verify status bar works correctly
-3. Document v3 migration guide
-4. Test v3 workflows on a sample project
+1. Monitor Code Documentation System v3.1 usage across all CODE projects
+2. Collect feedback on template effectiveness (I###, G###, E###, Q###)
+3. Refine templates based on real-world usage patterns
+4. Fix BUG 3 in inject_context.sh (change //= to = for session fields)
 5. Create README.md for GitHub repository
 
 ### Short-term Goals (This Month)
+- Observe multi-project template usage (coevolve, fil-yuta, fil-app)
+- Update templates in Governance/templates/ if refinements needed
+- Publish template updates to ~/.claude/templates/ when stable
 - Add README.md to GitHub repository
-- Configure GitHub repository settings (topics, description)
-- Create first sample project using v3 governance
-- Establish regular sync schedule for templates
+- Establish monthly archival process
 
 ### Long-term Vision (This Quarter)
-- Migrate all active projects to v3
-- Establish monthly archival process
-- Create portfolio view with Shared_context.md
+- Evaluate template effectiveness after 1 month of usage
+- Consider specialized templates (performance, security audit)
+- Create simplified "quick start" guide if needed
 - Develop additional automation scripts
 
 ### Future Considerations
@@ -192,13 +202,20 @@ None
 
 ## VII. Session History
 
-| Date       | Handoff File | Summary                                                                     | Duration |
-|------------|--------------|-----------------------------------------------------------------------------|----------|
-| 2026-01-09 | N/A          | Created v3 spec, templates, restructured folders, initialized git, pushed to GitHub | ~6 hours |
+| Date       | Handoff File                            | Summary                                                                     | Duration |
+|------------|-----------------------------------------|-----------------------------------------------------------------------------|----------|
+| 2026-01-09 | N/A                                     | Created v3 spec, templates, restructured folders, initialized git, pushed to GitHub | ~6 hours |
+| 2026-01-11 | 20260111_0430_code-doc-system-v3.1.md   | Created Code Documentation System v3.1 (fil-yuta session)                 | ~3 hours |
+| 2026-01-11 | 20260111_0730_template-standardization-v3.1.md | Standardized templates, published v3.1, updated workflow docs | ~1 hour  |
 
-[First v3 session - no prior handoff files yet]
+**Recent session achievements** (2026-01-11):
+- ✅ Standardized 16 templates with `-TEMPLATE.md` suffix
+- ✅ Published Code Documentation System v3.1 to ~/.claude/templates/
+- ✅ Updated v3_FULL_SPEC.md with template workflow (§19.4.1)
+- ✅ Generalized session handoff next steps (removed project-specific references)
+- ✅ Committed and pushed changes (fc977e0)
 
-**Session achievements**:
+**Previous session achievements** (2026-01-09):
 - ✅ v3 Full Specification (3,140 lines, 18 sections)
 - ✅ 10 v3 templates created and synced
 - ✅ Folder structure reorganized (v3 compliance)

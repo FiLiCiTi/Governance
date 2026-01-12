@@ -6,7 +6,9 @@
 # v2.5.1: Simplified output (centered dots, hooks only shown if errors)
 
 CWD=$(pwd)
-PROJECT=$(basename "$CWD")
+PROJECT_RAW=$(basename "$CWD")
+# Normalize project name to lowercase for consistency (matches cc script)
+PROJECT=$(echo "$PROJECT_RAW" | tr '[:upper:]' '[:lower:]')
 DATE=$(date '+%Y-%m-%d')
 CLAUDE_MD="$CWD/CLAUDE.md"
 

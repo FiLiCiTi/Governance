@@ -1,11 +1,14 @@
 #!/bin/bash
 # cc - Claude with Conversation capture
 # Records terminal session using script command
-# v2: Saves per-project to _governance/[project]/Conversations/
+# v3: Saves per-project to _governance/[project]/Conversations/
 #     Falls back to Governance/Conversations/ if not in a governed project
+# v3.1: Added name normalization (lowercase) for consistency
 
 CWD=$(pwd)
-PROJECT=$(basename "$CWD")
+PROJECT_RAW=$(basename "$CWD")
+# Normalize project name to lowercase for consistency
+PROJECT=$(echo "$PROJECT_RAW" | tr '[:upper:]' '[:lower:]')
 TIMESTAMP=$(date +%Y%m%d_%H%M)
 
 # Determine log location (per-project or global fallback)
@@ -40,23 +43,29 @@ STATE_FILE="$SESSION_DIR/${PROJECT_HASH}_session.json"
 
 # Check for duplicate session (another active session for same project)
 DUPLICATE_SESSION=false
+NOW=$(date +%s)
 if [[ -f "$STATE_FILE" ]]; then
     LAST_UPDATE=$(jq -r '.last_update // 0' "$STATE_FILE" 2>/dev/null)
     LAST_START=$(jq -r '.start_time // 0' "$STATE_FILE" 2>/dev/null)
-    NOW=$(date +%s)
     UPDATE_AGE=$((NOW - LAST_UPDATE))
-    SESSION_AGE=$((NOW - LAST_START))
 
-    if [[ $UPDATE_AGE -lt 120 ]]; then  # Last updated < 2 minutes ago
-        # Another active session detected
-        DUPLICATE_SESSION=true
-        echo "  ⚠️  DUPLICATE SESSION DETECTED!"
-        echo "  └─ Another session for '$PROJECT' was active ${UPDATE_AGE}s ago"
-        echo "  └─ Consider creating a subproject instead"
-        echo ""
-    elif [[ $SESSION_AGE -gt 28800 ]]; then  # Session > 8 hours old
-        HOURS=$((SESSION_AGE / 3600))
-        echo "  ⚠️  Old session detected (${HOURS}h ago) - resetting state"
+    # Guard against invalid timestamps (0 or null means file is corrupt/new)
+    if [[ "$LAST_START" == "0" || "$LAST_START" == "null" || -z "$LAST_START" ]]; then
+        # Skip old session check - state file is invalid, will be recreated
+        :
+    else
+        SESSION_AGE=$((NOW - LAST_START))
+        if [[ $UPDATE_AGE -lt 120 ]]; then  # Last updated < 2 minutes ago
+            # Another active session detected
+            DUPLICATE_SESSION=true
+            echo "  ⚠️  DUPLICATE SESSION DETECTED!"
+            echo "  └─ Another session for '$PROJECT' was active ${UPDATE_AGE}s ago"
+            echo "  └─ Consider creating a subproject instead"
+            echo ""
+        elif [[ $SESSION_AGE -gt 28800 ]]; then  # Session > 8 hours old
+            HOURS=$((SESSION_AGE / 3600))
+            echo "  ⚠️  Old session detected (${HOURS}h ago) - resetting state"
+        fi
     fi
 fi
 
