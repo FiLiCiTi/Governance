@@ -1,24 +1,16 @@
 #!/bin/bash
 # hooks/inject_context.sh
 # Hook: SessionStart
-# Purpose: Inject date, boundaries, and environment at session start
-# Claude should announce these for user confirmation
-# v2.5.1: Simplified output (centered dots, hooks only shown if errors)
+# Purpose: Signal session start with basic metadata
+# Claude will read CLAUDE.md files and format announcement per Rule #1
+# v3.0.0: Removed CLAUDE.md parsing (Claude reads natively)
 
 CWD=$(pwd)
 PROJECT_RAW=$(basename "$CWD")
 # Normalize project name to lowercase for consistency (matches cc script)
 PROJECT=$(echo "$PROJECT_RAW" | tr '[:upper:]' '[:lower:]')
 DATE=$(date '+%Y-%m-%d')
-CLAUDE_MD="$CWD/CLAUDE.md"
-
-# Extract boundaries from CLAUDE.md
-CAN_MODIFY=""
-CANNOT_MODIFY=""
-if [[ -f "$CLAUDE_MD" ]]; then
-    CAN_MODIFY=$(grep -i "CAN modify:" "$CLAUDE_MD" | head -1 | sed 's/.*CAN modify://' | tr -d '`*' | xargs)
-    CANNOT_MODIFY=$(grep -i "CANNOT modify:" "$CLAUDE_MD" | head -1 | sed 's/.*CANNOT modify://' | tr -d '`*' | xargs)
-fi
+TIME=$(date '+%I:%M %p')
 
 # Determine per-project state file path
 CWD_PATH=$(pwd)
@@ -138,12 +130,12 @@ if [ -f "$SETTINGS" ]; then
     fi
 fi
 
-# Output JSON with additionalContext (v2.5.1: simplified with centered dots)
+# Output JSON with additionalContext (v3.0.0: minimal signal, Claude reads CLAUDE.md)
 cat << EOF
 {
   "hookSpecificOutput": {
     "hookEventName": "SessionStart",
-    "additionalContext": "📅 Date: $DATE · 📁 Project: $PROJECT · ✅ CAN: $CAN_MODIFY · 🚫 CANNOT: $CANNOT_MODIFY$HOOK_DISPLAY$PLUGIN_DISPLAY"
+    "additionalContext": "📅 Date and Time: $DATE $TIME · 📁 Project: $PROJECT$HOOK_DISPLAY$PLUGIN_DISPLAY"
   }
 }
 EOF

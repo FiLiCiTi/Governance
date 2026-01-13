@@ -1,6 +1,6 @@
 # Governance Hub
 
-> **Type:** OPS | **Updated:** 2026-01-13
+> **Type:** OPS | **Updated:** 2026-01-13 | **inject_context.sh:** v3.0.0
 
 ## Boundaries
 
