@@ -36,6 +36,10 @@
 
 ## III. Active Work
 
+> **Implementation tracking:** See [implementation/IMPLEMENTATION_REGISTRY.md](implementation/IMPLEMENTATION_REGISTRY.md) for complete status
+>
+> This section provides high-level summary. Registry has detailed tracking and workflow status.
+
 **Current sprint/phase**: [Name or number]
 
 **Active work items**:

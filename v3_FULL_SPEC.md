@@ -1,9 +1,9 @@
 # Governance v3 Full Specification
 
-> **Version:** 3.1
-> **Date:** 2026-01-11 (Updated - Added Code Documentation System)
+> **Version:** 3.2
+> **Date:** 2026-01-13 (Updated - Added Implementation Registry System)
 > **Status:** Complete
-> **Previous:** V2.5_FULL_SPEC.md
+> **Previous:** v3.1 (2026-01-11)
 
 ## Table of Contents
 
@@ -54,7 +54,7 @@ All triggers are manual. No automatic handoff creation.
 
 ### 1.2 Key Decisions
 
-v3 governance decisions (#G12-#G17, #P10-#P12, #I15-#I17):
+v3 governance decisions (#G12-#G17, #P10-#P12, #I15-#I17, #D2):
 
 | ID   | Decision                              | Impact                          |
 |------|---------------------------------------|---------------------------------|
@@ -70,6 +70,7 @@ v3 governance decisions (#G12-#G17, #P10-#P12, #I15-#I17):
 | #I15 | Store handoffs in session_handoffs/   | Separate from code files        |
 | #I16 | CONTEXT.md in project root            | Easy access for Layer 6         |
 | #I17 | Shared_context.md global location     | ~/.claude/ for portfolio view   |
+| #D2  | Implementation Registry System (v3.2) | Single source of truth for CODE |
 
 ### 1.3 Migration Path
 
@@ -700,7 +701,9 @@ Context management in v3 uses two main files:
 
 **III. Active Work**
 - Current sprint/phase
-- Detailed descriptions of in-progress items
+- High-level summary of in-progress items
+- **CODE projects:** Reference implementation/IMPLEMENTATION_REGISTRY.md (v3.2)
+- **BIZZ/OPS projects:** Detailed descriptions of active work
 - Relevant file paths
 
 **IV. Decisions & Architecture**
@@ -1813,6 +1816,8 @@ The Code Documentation System standardizes how CODE-type projects organize imple
     │   └── archive/ (old versions)
     │
     ├── implementation/
+    │   ├── IMPLEMENTATION_REGISTRY.md (master index - v3.2)
+    │   │
     │   ├── active/I###-Feature/
     │   │   ├── I###-Feature.md
     │   │   ├── G###-Bug.md
@@ -1936,22 +1941,29 @@ I021-RAG-Routing/ (PARENT)
 
 **How Code Documentation System fits v3:**
 
-1. **CONTEXT.md** (v3 session continuity)
-   - References active I-numbers
-   - Tracks implementation progress
+1. **IMPLEMENTATION_REGISTRY.md** (v3.2 - single source of truth)
+   - Master index tracking all I###/G###/F###/E###/Q### items
+   - Workflow rules (future → active → completed)
+   - Progress Summary (checkbox view by phase)
+   - Referenced by CONTEXT.md and ARCHITECTURE.md
+
+2. **CONTEXT.md** (v3 session continuity)
+   - §III Active Work references IMPLEMENTATION_REGISTRY.md
+   - High-level summary only (registry has details)
    - Links to ARCHITECTURE.md
 
-2. **Session handoffs**
+3. **Session handoffs**
    - Reference I-numbers worked on
    - Link to G### bugs encountered
    - Track phase/sprint progress
+   - Pull status from registry
 
-3. **ARCHITECTURE.md** (specs/)
-   - Lists all phases with I-numbers
-   - Current sprint status
-   - Links to implementation/ folders
+4. **ARCHITECTURE.md** (specs/)
+   - §7 Implementation Phases references registry for tracking
+   - Strategic view (phases, goals)
+   - Registry has tactical status
 
-4. **CLAUDE.md** (project rules)
+5. **CLAUDE.md** (project rules)
    - References DOC_SYSTEM_CODE.md
    - Project-specific I###/G### conventions
    - Links to specs/ARCHITECTURE.md
@@ -1962,12 +1974,13 @@ All templates in `~/Desktop/Governance/templates/`:
 
 | Template | Purpose | Key Sections |
 |----------|---------|--------------|
+| `IMPLEMENTATION_REGISTRY-TEMPLATE.md` | Master index (v3.2) | Workflow, Progress, Active/Completed/Future |
 | `ARCHITECTURE_TEMPLATE.md` | System design doc | Vision, phases, decisions, roadmap |
 | `I###-TEMPLATE.md` | Feature implementation | Requirements, design, progress, bugs |
 | `G###-TEMPLATE.md` | Bug fix documentation | Symptom, debugging runs, root cause, fix |
 | `E###-TEMPLATE.md` | Educational lessons | Context, problem, solution, case studies |
 | `Q###-TEMPLATE.md` | Testing plan | Test strategy, cases, coverage |
-| `DOC_SYSTEM_CODE.md` | Full system reference | Complete guidelines (12 sections) |
+| `DOC_SYSTEM_CODE.md` | Full system reference | Complete guidelines (13 sections) |
 
 ### 13.10 Quick Start
 
@@ -1978,7 +1991,13 @@ All templates in `~/Desktop/Governance/templates/`:
 mkdir -p docs/{specs,implementation/{active,completed,future},educational,session_handoffs}
 ```
 
-2. Create ARCHITECTURE.md from template:
+2. Create IMPLEMENTATION_REGISTRY.md from template (v3.2):
+```bash
+cp ~/Desktop/Governance/templates/IMPLEMENTATION_REGISTRY-TEMPLATE.md \
+   docs/implementation/IMPLEMENTATION_REGISTRY.md
+```
+
+3. Create ARCHITECTURE.md from template:
 ```bash
 cp ~/Desktop/Governance/templates/ARCHITECTURE_TEMPLATE.md \
    docs/specs/ARCHITECTURE.md
@@ -2000,7 +2019,186 @@ cp ~/Desktop/Governance/templates/I###-TEMPLATE.md \
 3. Adopt structure for new work going forward
 4. Gradually migrate important historical docs
 
-### 13.11 Decision IDs
+### 13.11 Implementation Registry System
+
+**Purpose** (v3.2):
+
+The Implementation Registry serves as the **single source of truth** for all implementation items (Features, Issues, Governance) in CODE projects. It prevents documentation drift by establishing one master index that other documents reference.
+
+**When to use:**
+- ALL CODE-type projects (fil-yuta, fil-app, COEVOLVE, etc.)
+- NOT for BIZZ/OPS projects (use CONTEXT.md directly)
+
+**Benefits:**
+- Single authoritative tracking system
+- Clear workflow (future → active → completed)
+- Progress visibility (checkbox summaries by phase)
+- Prevents drift between ARCHITECTURE.md and implementation folders
+- Historical record of implementation journey
+
+#### Workflow Rules
+
+**Creating items in `future/`:**
+
+**Trigger:**
+- Planning session identifies new work
+- User requests new feature/enhancement
+- Scope expansion during implementation
+
+**Actions:**
+1. Create minimal detail doc in `future/IXXX-Title/IXXX-Title.md`
+2. Add entry to registry "Future" section (appropriate phase)
+3. Use minimal template (title, size, phase, dependencies, wireframe/design)
+4. **Update immediately** (not at session end)
+
+**Required fields:**
+- ID (I###, F#.#, G###)
+- Title (brief, descriptive)
+- Phase (references ARCHITECTURE.md phases)
+- Size (XS/S/M/L/XL)
+- Dependencies (list or "None")
+- Design reference (if applicable)
+
+---
+
+**Moving `future/` → `active/`:**
+
+**Trigger:**
+- Starting work NOW (this session)
+- About to write code for this item
+- User says "start working on X"
+
+**Pre-move checklist:**
+- [ ] Detail doc expanded with implementation plan
+- [ ] Acceptance criteria defined
+- [ ] Files to create/modify identified
+- [ ] Technical approach decided
+
+**Actions:**
+1. Move folder: `future/IXXX-Title/` → `active/IXXX-Title/`
+2. Update registry: Change section from "Future" → "Active"
+3. Expand detail doc (add Implementation Plan, Acceptance Criteria, Testing Notes)
+4. Create TodoWrite list for tracking session progress
+5. **Update immediately** (not at session end)
+
+---
+
+**Moving `active/` → `completed/`:**
+
+**Trigger:**
+- ALL acceptance criteria met ✓
+- Code implemented and tested ✓
+- Changes committed to git ✓
+
+**Pre-move checklist:**
+- [ ] Code complete
+- [ ] Manual testing passed
+- [ ] All bugs resolved
+- [ ] Git commit created
+- [ ] Documentation updated
+
+**Actions:**
+1. Move folder: `active/IXXX-Title/` → `completed/IXXX-Title/`
+2. Update registry: Add to "Completed" section with date
+3. Finalize detail doc (add completion date, commits, files changed, testing results)
+4. **Update immediately** after commit (not batched)
+
+#### Retention Policy
+
+**Completed items:**
+- Keep ALL completed docs indefinitely (no archival)
+- Provides historical record of implementation journey
+- Reference for similar future features
+
+**Active items:**
+- Move to completed when done (don't accumulate stale items)
+- If abandoned: Move to future/ with note "Deferred - [reason]"
+
+#### Progress Summary Format
+
+**Checkbox view by phase:**
+
+```markdown
+## 2. Progress Summary
+
+### Phase 0: [Phase Name] (X completed, Y active, Z future)
+- [x] I001 [Feature Name]
+- [🔄] I002 [Feature Name] *(in progress)*
+- [ ] I003 [Feature Name]
+
+### Phase 1: [Phase Name] (X completed, Y active, Z future)
+- [ ] I004 [Feature Name]
+- [ ] I005 [Feature Name]
+
+**Total:** X completed, Y active, Z future | **Progress:** XX% Phase 0, XX% Phase 1-2
+```
+
+**Legend:**
+- `[x]` = Completed
+- `[🔄]` = Active (in progress)
+- `[ ]` = Future (planned)
+- `~~Item~~` = Prerequisite or deferred (strikethrough)
+
+**Note:** I-numbers are chronological (order of creation), not sequential within phases.
+
+#### Relationship with Other Documents
+
+**IMPLEMENTATION_REGISTRY.md** (master - single source of truth):
+- Tracks all I###/G###/F###/E###/Q### items
+- Workflow status (future/active/completed)
+- Progress Summary (checkbox view)
+- Complete item tables with metadata
+
+**ARCHITECTURE.md** (strategic view):
+- References registry for tracking: "See IMPLEMENTATION_REGISTRY.md §X"
+- Shows phases, goals, scope (high-level)
+- No detailed checkbox lists or item tables
+- Strategic decisions and architecture notes
+
+**CONTEXT.md** (session continuity):
+- §III Active Work references registry: "See IMPLEMENTATION_REGISTRY.md"
+- High-level summary only (1-2 sentences per active item)
+- Links to detail docs
+- No duplicate tracking
+
+**Session Handoffs** (session history):
+- Reference I-numbers worked on
+- Link to G### bugs encountered
+- Pull status from registry
+- Track phase/sprint progress
+
+#### Registry Sections
+
+The registry contains these sections (see template):
+
+1. **Workflow Rules** - When to move items (future → active → completed)
+2. **Progress Summary** - Checkbox view by phase (high-level visibility)
+3. **Active** - Currently being worked on (table with status)
+4. **Completed** - Implemented and verified (table with dates)
+5. **Future (Phase 0/1/2/...)** - Planned items (tables by phase)
+6. **ID Conventions** - Prefixes (F/I/G/E/Q), numbering, relationships
+7. **Terminology** - Phase vs Sprint vs I-number hierarchy
+8. **Quick Reference** - By status, by phase, by size
+
+#### Migration Guide
+
+**For new CODE projects:**
+1. Start with registry from day 1
+2. Create from template: `IMPLEMENTATION_REGISTRY-TEMPLATE.md`
+3. Update as items move through workflow
+
+**For existing CODE projects:**
+1. Create registry from template
+2. Add current active items to Active section
+3. Add completed items to Completed section (at least recent ones)
+4. Add planned items to Future sections
+5. Update ARCHITECTURE.md to reference registry (remove checkbox lists)
+6. Update CONTEXT.md to reference registry (remove detailed tracking)
+7. Adopt workflow going forward
+
+**Template location:** `~/Desktop/Governance/templates/IMPLEMENTATION_REGISTRY-TEMPLATE.md`
+
+### 13.12 Decision IDs
 
 Code Documentation System introduces:
 

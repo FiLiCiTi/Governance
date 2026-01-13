@@ -1,10 +1,11 @@
-# Code Project Documentation System (v3)
+# Code Project Documentation System (v3.2)
 
 > **Type:** Reference / Governance
-> **Version:** 3.0
+> **Version:** 3.2
 > **Created:** 2026-01-11
+> **Updated:** 2026-01-13
 > **Purpose:** Standard documentation structure for all CODE-type projects
-> **Applies To:** fil-yuta, COEVOLVE, and all future coding projects
+> **Applies To:** fil-yuta, COEVOLVE, fil-app, and all future coding projects
 
 ---
 
@@ -24,6 +25,7 @@
 | 10      | [Educational Docs Strategy](#10-educational-docs-strategy)                     | :564   |
 | 11      | [Best Practices](#11-best-practices)                                           | :620   |
 | 12      | [Examples](#12-examples)                                                       | :674   |
+| 13      | [Implementation Registry System](#13-implementation-registry-system)           | :TBD   |
 
 ---
 
@@ -69,6 +71,8 @@ This document defines the **standard documentation structure** for all CODE-type
 │   │       └── ARCHITECTURE_v2.md
 │   │
 │   ├── implementation/
+│   │   ├── IMPLEMENTATION_REGISTRY.md (master index - v3.2)
+│   │   │
 │   │   ├── active/
 │   │   │   ├── I021-Feature-Name/
 │   │   │   │   ├── I021-Feature-Name.md
@@ -112,6 +116,7 @@ This document defines the **standard documentation structure** for all CODE-type
 |--------|---------|----------------|
 | `specs/` | Current design specifications | ARCHITECTURE.md, DATA_MODEL.md, API docs |
 | `specs/archive/` | Old spec versions | Previous versions when major updates happen |
+| `implementation/` | Master index | **IMPLEMENTATION_REGISTRY.md** (v3.2 - single source of truth) |
 | `implementation/active/` | Work in progress | Current sprint implementations |
 | `implementation/completed/` | Finished work | Completed features and their bugs/tests |
 | `implementation/future/` | Planned work | Future features with initial planning |
@@ -688,6 +693,123 @@ I014-Phase3-Testing/
 
 ---
 
+## 13. Implementation Registry System
+
+> **Added in v3.2** (2026-01-13)
+
+### Purpose
+
+The Implementation Registry is a **master index file** that provides a single source of truth for tracking all implementation items across a CODE project.
+
+**File:** `implementation/IMPLEMENTATION_REGISTRY.md`
+
+**Functions:**
+- Tracks status of all I###, G###, F###, E###, Q### items
+- Provides workflow rules (future → active → completed)
+- Shows progress summary with checkboxes by phase
+- Prevents ID collisions and status drift
+
+### When to Use
+
+**Required for:** All CODE projects with:
+- Multiple phases (2+ major milestones)
+- Multiple implementation items (5+ I-numbers)
+- Need for progress tracking across sessions
+
+**Optional for:** Small projects (<5 I-numbers, single phase)
+
+### Structure
+
+The registry includes:
+
+1. **Workflow Rules** - How to move items between folders
+2. **Progress Summary** - Checkbox view by phase (visual progress)
+3. **Active Section** - Currently in-progress items
+4. **Completed Section** - Finished items with dates
+5. **Future Sections** - Planned items by phase
+6. **ID Conventions** - F/I/G/E/Q prefix usage
+7. **Terminology** - Phase/Sprint/I-number hierarchy
+8. **Quick Reference** - Stats by status, phase, size
+
+### Workflow Rules
+
+**future/ → active/ → completed/**
+
+**Move to active when:**
+- Starting work NOW (this session)
+- Detail doc expanded with implementation plan
+- Update immediately (not at session end)
+
+**Move to completed when:**
+- All acceptance criteria met
+- Code tested and committed
+- Documentation finalized
+- Update immediately after commit
+
+### Relationship with Other Docs
+
+**IMPLEMENTATION_REGISTRY.md (source of truth)**
+↓ Referenced by ↓
+
+| Document | Section | Usage |
+|----------|---------|-------|
+| **CONTEXT.md** | §III Active Work | Reference registry for status, don't duplicate |
+| **ARCHITECTURE.md** | §7 Implementation Phases | Strategic view, registry has tactical tracking |
+| **Session Handoffs** | §II Work Summary | Pull completed/active/pending from registry |
+
+**Rule:** Registry is the single source. Other docs reference it, don't copy.
+
+### Progress Summary Format
+
+```markdown
+## Progress Summary
+
+### Phase 0: Foundation (6 completed, 1 active, 3 future)
+- [x] F0.1 Push Notification Permission
+- [x] I003 Confetti Animation
+- [🔄] I006 Setup Hub UX *(in progress)*
+- [ ] I002 Journal Modal Expand
+
+### Phase 1: Core Enhancements (0 completed, 0 active, 3 future)
+- [ ] I005 Rating Counts
+- [ ] I007 Plan Week View
+
+**Total:** 6 completed, 1 active, 6 future | **Progress:** 60% Phase 0, 0% Phase 1
+```
+
+**Legend:**
+- `[x]` = Completed
+- `[🔄]` = In progress (active)
+- `[ ]` = Future (not started)
+
+### Retention Policy
+
+**Completed items:** Keep ALL indefinitely (no archival)
+- Provides historical record
+- Reference for similar features
+- Documents learning journey
+
+**Active items:** Move to completed when done (don't accumulate stale)
+
+**Future items:** Create with minimal detail, expand when moving to active
+
+### Template
+
+See: `~/Desktop/Governance/templates/IMPLEMENTATION_REGISTRY-TEMPLATE.md`
+
+### Migration
+
+**For existing projects:**
+1. Create `implementation/IMPLEMENTATION_REGISTRY.md` from template
+2. Inventory all I###/G###/F### items (search docs/)
+3. Populate Active/Completed/Future sections
+4. Update CONTEXT.md §III to reference registry
+5. Update ARCHITECTURE.md phases to reference registry
+
+**Effort:** ~30-60 minutes depending on project size
+
+---
+
 ## Summary
 
 This documentation system provides:
@@ -707,7 +829,8 @@ This documentation system provides:
 
 ---
 
-*Version: 3.0*
+*Version: 3.2*
 *Created: 2026-01-11*
-*Last Updated: 2026-01-11*
+*Last Updated: 2026-01-13*
+*Changes: v3.2 adds Implementation Registry System (§13)*
 *Template Location: ~/Desktop/Governance/templates/DOC_SYSTEM_CODE.md*

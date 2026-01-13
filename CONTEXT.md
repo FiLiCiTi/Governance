@@ -1,27 +1,27 @@
 # Context - Governance
 
 > **Type:** OPS
-> **Last updated:** 2026-01-11
+> **Last updated:** 2026-01-13
 > **Status:** Active
 
 ## I. Current State
 
 **Phase**: Development
 
-**Progress**: Completed v3.1 Full Specification with Code Documentation System. All templates standardized and published to global location. Template development workflow established.
+**Progress**: Completed v3.2 governance system with Implementation Registry System. All templates updated to v3.2. Migration notices delivered to all CODE projects.
 
 **Key metrics**:
-- v3 spec: 3,400+ lines (18 sections)
-- Templates: 16 templates published (standardized naming)
+- v3 spec: 3,600+ lines (18 sections)
+- Templates: 17 templates published (v3.2 - added registry)
 - Archive: v1, v2, v2.5 organized
 - Git: 6 commits, 95 files
 - GitHub: Public repository in FiLiCiTi organization with topics
-- Decisions: 19 total (#G12-#G30)
-- Code Doc System: I###, G###, E###, Q### templates ready
+- Decisions: 20 total (#G12-#G30, #D2)
+- Code Doc System: I###, G###, E###, Q### templates + Implementation Registry
 
-**Last milestone**: Code Documentation System v3.1 published, all templates standardized with `-TEMPLATE.md` suffix
+**Last milestone**: Implementation Registry System (v3.2) created, all templates upgraded, migration notices delivered
 
-**Current focus**: Monitor template usage across CODE projects, collect feedback, refine based on real-world use
+**Current focus**: Monitor registry adoption across CODE projects, collect feedback on v3.2 system
 
 ## II. Progress Summary
 
@@ -55,13 +55,21 @@
 - Updated v3_FULL_SPEC.md with template development workflow (§19.4.1) - 2026-01-11
 - Generalized session handoff next steps (not project-specific) - 2026-01-11
 - Committed and pushed template standardization (fc977e0) - 2026-01-11
+- Created IMPLEMENTATION_REGISTRY-TEMPLATE.md (335 lines, 10 sections) - 2026-01-13
+- Updated DOC_SYSTEM_CODE.md to v3.2 (added §13 Implementation Registry System) - 2026-01-13
+- Updated ARCHITECTURE_TEMPLATE.md (§7 references registry) - 2026-01-13
+- Updated CONTEXT-TEMPLATE.md (§III references registry for CODE projects) - 2026-01-13
+- Upgraded v3_FULL_SPEC.md to v3.2 (8 sections modified, new §13.11 added) - 2026-01-13
+- Applied registry to fil-app (working example with 6 completed, 1 active, 13 future items) - 2026-01-13
+- Created session handoff for v3.2 migration (20260113_v3.2-implementation-registry-migration.md) - 2026-01-13
+- Delivered migration notices to COEVOLVE and fil-yuta projects - 2026-01-13
 
 ### In Progress
 None
 
 ### Pending
-- Monitor Code Documentation System usage across CODE projects (coevolve, fil-yuta, fil-app)
-- Collect feedback on template effectiveness after 1 month
+- Monitor Implementation Registry System adoption across CODE projects (COEVOLVE, fil-yuta, fil-app)
+- Collect feedback on v3.2 registry effectiveness after 1 month
 - Fix BUG 3: State file session reset (inject_context.sh:46-56, use = instead of //=)
 - Establish monthly archival process
 - Create README.md for GitHub repository
@@ -113,12 +121,13 @@ None
 | #G28 | 2026-01-10 | Initialize state file at session start (INCOMPLETE) | Fix didn't work, BUG 3 identified | Needs proper fix |
 | #G29 | 2026-01-10 | Create sync_templates.sh for drift prevention | Templates exist in 2 locations | Template consistency |
 | #G30 | 2026-01-10 | Migrate active projects to v3 | Completed via other project setups | Cross-project consistency |
+| #D2  | 2026-01-13 | Implementation Registry System (v3.2) | Single source of truth for CODE | All CODE projects |
 
 ### Architecture Notes
 
-**Governance v3.1 structure**:
+**Governance v3.2 structure**:
 - Templates: Two-stage workflow
-  - Development: ~/Desktop/Governance/templates/ (16 templates)
+  - Development: ~/Desktop/Governance/templates/ (17 templates)
   - Production: ~/.claude/templates/ (single source of truth for all projects)
 - Reference docs: ~/Desktop/Governance/Ref/
 - Archives: ~/Desktop/Governance/archive/ (v1, v2, v2.5, sessions)
@@ -129,8 +138,8 @@ None
 - Documentation: Markdown
 - Automation: Bash scripts (inject_context.sh, log_tool_use.sh, etc.)
 - Version control: Git + GitHub (FiLiCiTi/Governance)
-- Templates: 16 standardized templates with `-TEMPLATE.md` suffix
-- Code Documentation System: I###, G###, E###, Q### templates + ARCHITECTURE
+- Templates: 17 standardized templates with `-TEMPLATE.md` suffix
+- Code Documentation System: I###, G###, E###, Q### templates + ARCHITECTURE + IMPLEMENTATION_REGISTRY (v3.2)
 - CI/CD: gh CLI for PR workflows
 - GitHub topics: claude-code, governance, ai-development, session-management
 
@@ -176,24 +185,25 @@ None
 ## VI. Roadmap
 
 ### Immediate Next Steps
-1. Monitor Code Documentation System v3.1 usage across all CODE projects
-2. Collect feedback on template effectiveness (I###, G###, E###, Q###)
-3. Refine templates based on real-world usage patterns
+1. Monitor Implementation Registry System (v3.2) adoption across CODE projects
+2. Collect feedback on registry effectiveness and workflow
+3. Refine registry template based on real-world usage
 4. Fix BUG 3 in inject_context.sh (change //= to = for session fields)
 5. Create README.md for GitHub repository
 
 ### Short-term Goals (This Month)
-- Observe multi-project template usage (coevolve, fil-yuta, fil-app)
+- Observe registry adoption in COEVOLVE, fil-yuta, fil-app
 - Update templates in Governance/templates/ if refinements needed
 - Publish template updates to ~/.claude/templates/ when stable
 - Add README.md to GitHub repository
 - Establish monthly archival process
+- Consider v3.3 enhancements based on feedback
 
 ### Long-term Vision (This Quarter)
-- Evaluate template effectiveness after 1 month of usage
-- Consider specialized templates (performance, security audit)
-- Create simplified "quick start" guide if needed
-- Develop additional automation scripts
+- Evaluate v3.2 registry effectiveness after 1 month
+- Consider specialized templates (performance testing, security audit)
+- Create simplified "quick start" guide for new CODE projects
+- Develop additional automation scripts for registry management
 
 ### Future Considerations
 - Integration with CI/CD for template validation
@@ -202,18 +212,20 @@ None
 
 ## VII. Session History
 
-| Date       | Handoff File                            | Summary                                                                     | Duration |
-|------------|-----------------------------------------|-----------------------------------------------------------------------------|----------|
-| 2026-01-09 | N/A                                     | Created v3 spec, templates, restructured folders, initialized git, pushed to GitHub | ~6 hours |
-| 2026-01-11 | 20260111_0430_code-doc-system-v3.1.md   | Created Code Documentation System v3.1 (fil-yuta session)                 | ~3 hours |
-| 2026-01-11 | 20260111_0730_template-standardization-v3.1.md | Standardized templates, published v3.1, updated workflow docs | ~1 hour  |
+| Date       | Handoff File                                          | Summary                                                                     | Duration |
+|------------|-------------------------------------------------------|-----------------------------------------------------------------------------|----------|
+| 2026-01-09 | N/A                                                   | Created v3 spec, templates, restructured folders, initialized git, pushed to GitHub | ~6 hours |
+| 2026-01-11 | 20260111_0430_code-doc-system-v3.1.md                 | Created Code Documentation System v3.1 (fil-yuta session)                 | ~3 hours |
+| 2026-01-11 | 20260111_0730_template-standardization-v3.1.md        | Standardized templates, published v3.1, updated workflow docs | ~1 hour  |
+| 2026-01-13 | 20260113_v3.2-implementation-registry-migration.md    | v3.1 → v3.2 upgrade with Implementation Registry System | ~90 min  |
 
-**Recent session achievements** (2026-01-11):
-- ✅ Standardized 16 templates with `-TEMPLATE.md` suffix
-- ✅ Published Code Documentation System v3.1 to ~/.claude/templates/
-- ✅ Updated v3_FULL_SPEC.md with template workflow (§19.4.1)
-- ✅ Generalized session handoff next steps (removed project-specific references)
-- ✅ Committed and pushed changes (fc977e0)
+**Recent session achievements** (2026-01-13):
+- ✅ Created Implementation Registry System (v3.2)
+- ✅ Created IMPLEMENTATION_REGISTRY-TEMPLATE.md (335 lines)
+- ✅ Updated all CODE templates to v3.2 (4 templates)
+- ✅ Upgraded v3_FULL_SPEC.md to v3.2 (8 sections + new §13.11)
+- ✅ Applied registry to fil-app (working example)
+- ✅ Delivered migration notices to COEVOLVE and fil-yuta
 
 **Previous session achievements** (2026-01-09):
 - ✅ v3 Full Specification (3,140 lines, 18 sections)

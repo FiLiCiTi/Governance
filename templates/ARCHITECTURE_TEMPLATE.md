@@ -112,38 +112,42 @@
 
 ## 7. Implementation Phases
 
+> **Status tracking:** See [IMPLEMENTATION_REGISTRY.md](../implementation/IMPLEMENTATION_REGISTRY.md) for complete item tracking
+>
+> This section provides strategic overview of phases. Registry has tactical status and details.
+
 ### Phase 1: [Phase Name] ✅ (I1-I3)
 
 **Goal:** What this phase achieves
 
-**Deliverables:**
-- [x] Feature 1 (I1)
-- [x] Feature 2 (I2)
-- [x] Feature 3 (I3)
+**Scope:**
+- Feature set description (high-level)
+- Major capabilities delivered
 
-**Bugs Fixed:** G001-G005 (see implementation/completed/)
-
+**Progress:** 3 items completed
+**Bugs Fixed:** G001-G005
 **Duration:** [X weeks]
 **Completed:** YYYY-MM-DD
+
+**Items:** See [IMPLEMENTATION_REGISTRY.md §4](../implementation/IMPLEMENTATION_REGISTRY.md#4-completed)
 
 ---
 
 ### Phase 2: [Phase Name] ✅ (I4-I7)
 
-**Goal:** What this phase achieves
+**Goal:** What this phase achieved
 
-**Deliverables:**
-- [x] Feature 1 (I4)
-- [x] Feature 2 with complex implementation (I5)
-  - Sub-feature A
-  - Sub-feature B
-- [x] Feature 3 (I6)
-- [x] Feature 4 (I7)
+**Scope:**
+- Feature set A (integration features)
+- Feature set B (UI enhancements)
+- Bug fixes and stability
 
+**Progress:** 4 items completed
 **Bugs Fixed:** G006-G012
-
 **Duration:** [X weeks]
 **Completed:** YYYY-MM-DD
+
+**Items:** See [IMPLEMENTATION_REGISTRY.md §4](../implementation/IMPLEMENTATION_REGISTRY.md#4-completed)
 
 ---
 
@@ -172,19 +176,15 @@
 ---
 
 #### Sprint 3: [Sprint Name] 🎯 CURRENT (I12-I13)
-- [x] Feature 1 (I12) ✅
-- [ ] Feature 2 (I13) 🔄 In Progress
-  - [x] Backend implementation
-  - [x] Frontend UI
-  - [ ] Testing & bug fixes
 
-**Status:** 🔄 In Progress - Week 1 of 2
-**Blockers:** [List any blockers]
+**Progress:** 1 of 2 items complete
+**Active:** I13 (Week 1 of 2)
+**Blockers:** [List any blockers - high-level only]
 **Timeline:** 2 weeks (YYYY-MM-DD to YYYY-MM-DD)
 
-**Active Bugs:** G021, G022 (see implementation/active/)
+**Status tracking:** See [IMPLEMENTATION_REGISTRY.md §3](../implementation/IMPLEMENTATION_REGISTRY.md#3-active)
 
-**Reference:** [I13-FeatureName.md](../implementation/active/I13-*.md)
+**Implementation details:** [I13-FeatureName.md](../implementation/active/I13-*.md)
 
 ---
 
@@ -215,13 +215,16 @@
 
 **Goal:** What this phase achieves
 
-**Planned Deliverables:**
-- [ ] Feature 1 (I14)
-- [ ] Feature 2 (I15)
-- [ ] Feature 3 (I16)
+**Scope:**
+- Feature set description (high-level)
+- Major capabilities to be added
+- Expected user impact
 
+**Planned items:** 3 features (I14-I16)
 **Estimated Duration:** [X weeks]
 **Prerequisites:** Phase 3 complete
+
+**Items:** See [IMPLEMENTATION_REGISTRY.md §6-8](../implementation/IMPLEMENTATION_REGISTRY.md) (Future sections)
 
 ---
 
