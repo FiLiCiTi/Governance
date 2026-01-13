@@ -44,7 +44,13 @@
       "Bash(gh:*)",
       "Bash(env)",
       "Bash(lsof:*)",
-      "Bash(/Users/mohammadshehata/Desktop/Governance/scripts/sync_templates.sh:*)"
+      "Bash(/Users/mohammadshehata/Desktop/Governance/scripts/sync_templates.sh:*)",
+      "Bash(__NEW_LINE_b89efbf98ffae352__ echo \"\")",
+      "Bash(do jq -r '\"\"\\\\\\(.project_name\\) → \\\\\\(.project\\)\"\"' \"$f\" done)",
+      "Bash(# Log files exist from Jan 11! Let''s trace the path from log filenames echo \"\"=== Jan 11 log files - what paths were used? ===\"\" ls -la ~/Desktop/FILICITI/Products/FlowInLife/_governance/fil-app/Conversations/*20260111*)",
+      "Bash(~/Desktop/Governance/scripts/audit_sessions.sh:*)",
+      "Bash(__NEW_LINE_c6d7f27f20093664__ echo \"\")",
+      "Bash(# Check if there''s actually a Conversations folder in ''active'' echo \"\"=== DOES ''active'' HAVE ITS OWN LOGS? ===\"\" ls -la \"\"/Users/mohammadshehata/Desktop/FILICITI/Products/COEVOLVE/code/docs/implementation/active/../_governance/active/Conversations\"\" || echo \"\"No _governance/active/Conversations\"\" echo \"\"\"\" echo \"\"=== WHERE ARE THE LOGS COMING FROM? ===\"\" # The audit found logs for ''active'' - where from? find ~/Desktop/FILICITI -path \"\"*active*\"\" -name \"\"*.log\"\")"
     ]
   }
 }

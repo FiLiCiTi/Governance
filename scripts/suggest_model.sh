@@ -1,9 +1,9 @@
 #!/bin/bash
 # scripts/suggest_model.sh
-# Purpose: Simplified status line (v2.5.1)
+# Purpose: Simplified status line (v2.5.3)
 # Usage: Called by Claude Code statusLine setting
-# Output: 🟢 Context: ~XK (calibrated) · ✅ Warmup: Xm · 🔌 Active Plugins: name
-# v2.5.1: Removed Model, Todos, Hooks, Recommendations. Using centered dots (·)
+# Output: 🟢 Context: ~XK · ✅ 🕐 Xm · 🔧 Last Tool
+# v2.5.3: Replaced warmup timer with session duration timer (2.5h max enforcement)
 
 # Determine per-project state file path
 CWD_PATH=$(pwd)
@@ -173,28 +173,24 @@ if [[ $CALIBRATION_ELAPSED -ge $CALIBRATION_INTERVAL ]]; then
 fi
 
 # ============================================================
-# SECTION 6: Warmup Timer (v2.5.2: activity-based refresh)
+# SECTION 6: Session Duration Timer
 # ============================================================
-LAST_WARMUP=$(jq -r '.last_warmup // 0' "$STATE_FILE" 2>/dev/null)
-LAST_UPDATE=$(jq -r '.last_update // 0' "$STATE_FILE" 2>/dev/null)
+SESSION_START=$(jq -r '.start_time // 0' "$STATE_FILE" 2>/dev/null)
 
-# Use most recent activity (last_update) if more recent than last_warmup
-# This keeps warmup fresh during active sessions
-if [[ "$LAST_UPDATE" -gt "$LAST_WARMUP" ]]; then
-    WARMUP_REF=$LAST_UPDATE
+# Guard against epoch 0
+if [[ "$SESSION_START" == "0" || "$SESSION_START" == "null" ]]; then
+    SESSION_DURATION=0
 else
-    WARMUP_REF=$LAST_WARMUP
+    SESSION_DURATION=$(((NOW - SESSION_START) / 60))
 fi
-WARMUP_ELAPSED=$(((NOW - WARMUP_REF) / 60))
 
-# v2.5.2: Threshold-based warmup status (refreshed by activity)
-# ✅ <240m (4h) = Ready, ⚠️ 240-480m (4-8h) = Stale, 🔴 >480m (8h) = Cold
-if [[ $WARMUP_ELAPSED -ge 480 ]]; then
-    WARMUP_DISPLAY="🔴 Warmup: ${WARMUP_ELAPSED}m"
-elif [[ $WARMUP_ELAPSED -ge 240 ]]; then
-    WARMUP_DISPLAY="⚠️ Warmup: ${WARMUP_ELAPSED}m"
+# Status thresholds: ✅ <120m, ⚠️ 120-149m, 🔴 ≥150m
+if [[ $SESSION_DURATION -ge 150 ]]; then
+    SESSION_DISPLAY="🔴 🕐 ${SESSION_DURATION}m"
+elif [[ $SESSION_DURATION -ge 120 ]]; then
+    SESSION_DISPLAY="⚠️ 🕐 ${SESSION_DURATION}m"
 else
-    WARMUP_DISPLAY="✅ Warmup: ${WARMUP_ELAPSED}m"
+    SESSION_DISPLAY="✅ 🕐 ${SESSION_DURATION}m"
 fi
 
 # ============================================================
@@ -224,18 +220,11 @@ if [[ "$NEEDS_CALIBRATION" == true ]]; then
     RECOMMENDATIONS+=("Check /context")
 fi
 
-# Warning: Warmup due
-if [[ $WARMUP_ELAPSED -ge 90 ]]; then
-    RECOMMENDATIONS+=("Warmup due")
-fi
-
-# Warning: Long session
-SESSION_START=$(jq -r '.start_time // 0' "$STATE_FILE" 2>/dev/null)
-SESSION_DURATION=$(((NOW - SESSION_START) / 3600))
-if [[ $SESSION_DURATION -ge 8 ]]; then
-    RECOMMENDATIONS+=("⚠️ Long session (${SESSION_DURATION}h)")
-elif [[ $SESSION_DURATION -ge 4 ]]; then
-    RECOMMENDATIONS+=("Session ${SESSION_DURATION}h")
+# Warning: Session duration (2.5h max enforcement)
+if [[ $SESSION_DURATION -ge 150 ]]; then
+    RECOMMENDATIONS+=("⚠️ Start new session")
+elif [[ $SESSION_DURATION -ge 120 ]]; then
+    RECOMMENDATIONS+=("Consider wrapping up")
 fi
 
 # Info: Model suggestions (only if no warnings and model confirmed)
@@ -281,13 +270,13 @@ if [[ -f "$TOOL_FILE" ]]; then
 fi
 
 # ============================================================
-# SECTION 9: Format Output (v2.5.2 Simplified)
+# SECTION 9: Format Output (v2.5.3 Simplified)
 # ============================================================
-# v2.5.2: Context, Warmup, Last Tool (if recent)
+# v2.5.3: Context, Session Timer, Last Tool (if recent)
 
 # Final status line (simplified)
 if [[ "$LAST_TOOL" != "--" ]]; then
-    echo "$CONTEXT_DISPLAY · $WARMUP_DISPLAY · 🔧 $LAST_TOOL"
+    echo "$CONTEXT_DISPLAY · $SESSION_DISPLAY · 🔧 $LAST_TOOL"
 else
-    echo "$CONTEXT_DISPLAY · $WARMUP_DISPLAY"
+    echo "$CONTEXT_DISPLAY · $SESSION_DISPLAY"
 fi

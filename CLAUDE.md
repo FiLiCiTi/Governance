@@ -1,6 +1,6 @@
 # Governance Hub
 
-> **Type:** OPS | **Updated:** 2026-01-07
+> **Type:** OPS | **Updated:** 2026-01-13
 
 ## Boundaries
 
