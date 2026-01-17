@@ -1,7 +1,7 @@
 # Context - Governance
 
 > **Type:** OPS
-> **Last updated:** 2026-01-13
+> **Last updated:** 2026-01-16
 > **Status:** Active
 
 ## I. Current State
@@ -63,6 +63,11 @@
 - Applied registry to fil-app (working example with 6 completed, 1 active, 13 future items) - 2026-01-13
 - Created session handoff for v3.2 migration (20260113_v3.2-implementation-registry-migration.md) - 2026-01-13
 - Delivered migration notices to COEVOLVE and fil-yuta projects - 2026-01-13
+- Moved Governance from ~/Desktop/ to ~/Desktop/FILICITI/ - 2026-01-16
+- Updated ~/.claude/settings.json paths (11 occurrences) for new location - 2026-01-16
+- Researched folder organization frameworks (Johnny.Decimal, PARA) - 2026-01-16
+- Analyzed Team Flow Ultimatum structure for migration planning - 2026-01-16
+- Identified two-level hierarchy: Company (4-Awareness) vs Product (businessplan/03_Awareness) - 2026-01-16
 
 ### In Progress
 None
@@ -73,6 +78,13 @@ None
 - Fix BUG 3: State file session reset (inject_context.sh:46-56, use = instead of //=)
 - Establish monthly archival process
 - Create README.md for GitHub repository
+- Remove old ~/Desktop/Governance directory (manual step)
+- Test new hook flow in fresh session
+- **Team Flow Ultimatum → FILICITI migration**:
+  - Deep-dive into folder structure details
+  - Create FlowInLife businessplan/ folder (mirror COEVOLVE structure)
+  - Migrate files selectively as recovery completes (~8TB with 23 snapshots)
+  - Apply full v3 governance to migrated structure
 
 ## III. Active Work
 
@@ -126,12 +138,13 @@ None
 ### Architecture Notes
 
 **Governance v3.2 structure**:
+- Location: ~/Desktop/FILICITI/Governance/ (moved from ~/Desktop/Governance/ on 2026-01-16)
 - Templates: Two-stage workflow
-  - Development: ~/Desktop/Governance/templates/ (17 templates)
+  - Development: ~/Desktop/FILICITI/Governance/templates/ (17 templates)
   - Production: ~/.claude/templates/ (single source of truth for all projects)
-- Reference docs: ~/Desktop/Governance/Ref/
-- Archives: ~/Desktop/Governance/archive/ (v1, v2, v2.5, sessions)
-- Scripts: ~/Desktop/Governance/scripts/ (hooks + scripts merged)
+- Reference docs: ~/Desktop/FILICITI/Governance/Ref/
+- Archives: ~/Desktop/FILICITI/Governance/archive/ (v1, v2, v2.5, sessions)
+- Scripts: ~/Desktop/FILICITI/Governance/scripts/ (hooks + scripts merged)
 - Active: session_handoffs/, Conversations/
 
 **Tech stack**:
@@ -218,8 +231,17 @@ None
 | 2026-01-11 | 20260111_0430_code-doc-system-v3.1.md                 | Created Code Documentation System v3.1 (fil-yuta session)                 | ~3 hours |
 | 2026-01-11 | 20260111_0730_template-standardization-v3.1.md        | Standardized templates, published v3.1, updated workflow docs | ~1 hour  |
 | 2026-01-13 | 20260113_v3.2-implementation-registry-migration.md    | v3.1 → v3.2 upgrade with Implementation Registry System | ~90 min  |
+| 2026-01-16 | 20260116_1627_settings-migration-tfu-planning.md      | Moved Governance to FILICITI, updated settings.json, TFU migration planning | ~1 hour  |
 
-**Recent session achievements** (2026-01-13):
+**Recent session achievements** (2026-01-16):
+- ✅ Completed Governance directory move to ~/Desktop/FILICITI/Governance
+- ✅ Updated ~/.claude/settings.json (11 paths)
+- ✅ Researched folder organization frameworks (Johnny.Decimal, PARA)
+- ✅ Analyzed Team Flow Ultimatum structure (3,210 dirs, 10,235 files)
+- ✅ Identified company vs product hierarchy for Awareness folders
+- ✅ Confirmed FlowInLife needs businessplan/ folder (mirror COEVOLVE)
+
+**Previous session achievements** (2026-01-13):
 - ✅ Created Implementation Registry System (v3.2)
 - ✅ Created IMPLEMENTATION_REGISTRY-TEMPLATE.md (335 lines)
 - ✅ Updated all CODE templates to v3.2 (4 templates)
@@ -227,7 +249,7 @@ None
 - ✅ Applied registry to fil-app (working example)
 - ✅ Delivered migration notices to COEVOLVE and fil-yuta
 
-**Previous session achievements** (2026-01-09):
+**Earlier session achievements** (2026-01-09):
 - ✅ v3 Full Specification (3,140 lines, 18 sections)
 - ✅ 10 v3 templates created and synced
 - ✅ Folder structure reorganized (v3 compliance)
