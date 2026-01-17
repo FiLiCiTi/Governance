@@ -18,7 +18,6 @@ if [[ -z "$INPUT" ]]; then
 fi
 
 STATE_FILE="$HOME/.claude/loop_state.json"
-GOVERNANCE_SESSION="$HOME/.claude/governance_session.json"
 
 # Thresholds
 ERROR_THRESHOLD=3      # Same error 3+ times = warning

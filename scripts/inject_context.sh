@@ -34,28 +34,56 @@ if [[ ! -f "$STATE_FILE" ]]; then
   "token_count": 0,
   "tool_count": 0,
   "context_factor": 1.0,
-  "duplicate_session": false
+  "duplicate_session": false,
+  "status": "active"
 }
 EOF
 else
-    # Ensure all required fields exist in existing state file
+    # Check if this is a stale session (file exists, > 5 min old, status == "finalized")
     NOW=$(date +%s)
-    jq --argjson now "$NOW" '
-        .last_calibration //= 0 |
-        .context_factor //= 1.0 |
-        .last_warmup //= $now |
-        .start_time //= $now |
-        .token_count //= 0 |
-        .tool_count //= 0
-    ' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+    FILE_MOD_TIME=$(stat -f%m "$STATE_FILE" 2>/dev/null || echo "0")
+    FILE_AGE=$((NOW - FILE_MOD_TIME))
+    SESSION_STATUS=$(jq -r '.status // "unknown"' "$STATE_FILE" 2>/dev/null)
+
+    # If session is stale (5+ minutes old AND properly finalized), reset it
+    if [[ $FILE_AGE -ge 300 && "$SESSION_STATUS" == "finalized" ]]; then
+        # Stale session detected - reset for fresh start
+        cat > "$STATE_FILE" << EOF
+{
+  "start_time": $NOW,
+  "last_warmup": $NOW,
+  "last_update": $NOW,
+  "last_calibration": 0,
+  "project": "$CWD_PATH",
+  "project_name": "$(basename "$CWD_PATH")",
+  "token_count": 0,
+  "tool_count": 0,
+  "context_factor": 1.0,
+  "duplicate_session": false,
+  "status": "active"
+}
+EOF
+    else
+        # Session is either recent or corrupted - ensure all required fields exist
+        jq --argjson now "$NOW" '
+            .last_calibration //= 0 |
+            .context_factor //= 1.0 |
+            .last_warmup //= $now |
+            .start_time //= $now |
+            .token_count //= 0 |
+            .tool_count //= 0 |
+            .status //= "active"
+        ' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+    fi
 fi
 
 # Check for manual compact flag (Option D)
 COMPACT_FLAG="$HOME/.claude/compact_flag"
 if [[ -f "$COMPACT_FLAG" ]]; then
-    # User ran /compact and created flag, reset token count
+    # User ran /compact and created flag, reset token count AND start_time for fresh session
     if [[ -f "$STATE_FILE" ]]; then
-        jq '.token_count = 0' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
+        NOW=$(date +%s)
+        jq --argjson now "$NOW" '.token_count = 0 | .start_time = $now | .last_warmup = $now' "$STATE_FILE" > "$STATE_FILE.tmp" && mv "$STATE_FILE.tmp" "$STATE_FILE"
     fi
     rm "$COMPACT_FLAG"
 fi

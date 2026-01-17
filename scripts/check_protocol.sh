@@ -21,8 +21,11 @@ else
     TYPE="CODE"
 fi
 
-# State and history files
-STATE_FILE="$HOME/.claude/governance_session.json"
+# Determine per-project state file path
+CWD_PATH=$(pwd)
+# Normalize path to lowercase for consistent hashing (macOS case-insensitive)
+PROJECT_HASH=$(echo "$CWD_PATH" | tr '[:upper:]' '[:lower:]' | md5 -q 2>/dev/null || echo "$(basename "$CWD_PATH")")
+STATE_FILE="$HOME/.claude/sessions/${PROJECT_HASH}_session.json"
 HISTORY_FILE="$HOME/.claude/history.jsonl"
 
 echo ""
