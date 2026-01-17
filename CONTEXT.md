@@ -1,7 +1,7 @@
 # Context - Governance
 
 > **Type:** OPS
-> **Last updated:** 2026-01-16
+> **Last updated:** 2026-01-17
 > **Status:** Active
 
 ## I. Current State
@@ -68,6 +68,15 @@
 - Researched folder organization frameworks (Johnny.Decimal, PARA) - 2026-01-16
 - Analyzed Team Flow Ultimatum structure for migration planning - 2026-01-16
 - Identified two-level hierarchy: Company (4-Awareness) vs Product (businessplan/03_Awareness) - 2026-01-16
+- Fixed `cc` command alias override preventing welcome message display - 2026-01-17
+- Updated ~/.zshrc PATH (old Governance location → FILICITI/Governance) - 2026-01-17
+- Removed blocking `alias cc='claude'` from ~/.zprofile - 2026-01-17
+- Performed global search: found 37 old path references across system - 2026-01-17
+- Updated ~/.claude/CLAUDE.md (2 refs) - 2026-01-17
+- Updated ~/.claude/Shared_context.md (5 refs) - 2026-01-17
+- Updated 10 template files in ~/.claude/templates/ (26 refs) - 2026-01-17
+- Updated ~/Desktop/DataStoragePlan/CLAUDE.md (1 ref) - 2026-01-17
+- Committed path migration updates (91a10fd) and pushed to GitHub - 2026-01-17
 
 ### In Progress
 None
