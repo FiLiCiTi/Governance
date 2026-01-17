@@ -24,7 +24,7 @@ determine_log_dir() {
         echo "./Conversations"
     else
         # Fallback to global Governance
-        echo "$HOME/Desktop/Governance/Conversations"
+        echo "$HOME/Desktop/FILICITI/Governance/Conversations"
     fi
 }
 
