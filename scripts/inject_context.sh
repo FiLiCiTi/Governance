@@ -39,14 +39,14 @@ if [[ ! -f "$STATE_FILE" ]]; then
 }
 EOF
 else
-    # Check if this is a stale session (file exists, > 5 min old, status == "finalized")
+    # Check if this is a stale session (file exists, > 10 sec old, status == "finalized")
     NOW=$(date +%s)
     FILE_MOD_TIME=$(stat -f%m "$STATE_FILE" 2>/dev/null || echo "0")
     FILE_AGE=$((NOW - FILE_MOD_TIME))
     SESSION_STATUS=$(jq -r '.status // "unknown"' "$STATE_FILE" 2>/dev/null)
 
-    # If session is stale (5+ minutes old AND properly finalized), reset it
-    if [[ $FILE_AGE -ge 300 && "$SESSION_STATUS" == "finalized" ]]; then
+    # If session is stale (10+ seconds old AND properly finalized), reset it for fresh session
+    if [[ $FILE_AGE -ge 10 && "$SESSION_STATUS" == "finalized" ]]; then
         # Stale session detected - reset for fresh start
         cat > "$STATE_FILE" << EOF
 {

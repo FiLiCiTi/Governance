@@ -177,7 +177,7 @@ These execute automatically at Claude Code events.
 | Scenario | File Status | Action |
 |----------|-------------|--------|
 | **New Session** | File doesn't exist | Create fresh state (start_time=NOW, token_count=0, status="active") |
-| **Stale Session** | File exists + age ≥5min + status="finalized" | RESET all fields (fresh session start_time, token_count=0) |
+| **Stale Session** | File exists + age ≥10sec + status="finalized" | RESET all fields (fresh session start_time, token_count=0) |
 | **Active Session** | File exists + recent + status="active" | Preserve existing fields (continue session) |
 
 4. Handle compact flag: If `~/.claude/compact_flag` exists:
@@ -644,10 +644,10 @@ USER RUNS: cc
 
 **Key Scenario: Stale Session Reset**
 
-If you exit Claude, wait 5+ minutes, then run `cc` again:
+If you exit Claude and then run `cc` again (even 10+ seconds later):
 ```
 Old session file: ~/.claude/sessions/{HASH}_session.json
-├─ File age: 450 seconds (7.5 minutes) ✓ ≥ 300s
+├─ File age: 15 seconds (or more) ✓ ≥ 10s
 ├─ status: "finalized" ✓
 └─ Action: RESET ALL FIELDS
    ├─ start_time: 1768651202 → 1768652000 (NEW)
@@ -1239,9 +1239,8 @@ grep -r "Desktop/Governance" ~/.claude/settings.json
 
 **Symptom:**
 ```
-Quit session after 30 seconds
-Wait 10 minutes
-Run cc
+Quit session
+Run cc after 20+ seconds
 Status bar still shows: 🕐 15m (old session time!)
 ```
 
@@ -1257,14 +1256,14 @@ jq '.status' ~/.claude/sessions/{HASH}_session.json
 
 # Check file modification time
 stat -f "%Sm" ~/.claude/sessions/{HASH}_session.json
-# Should be: > 5 min ago
+# Should be: old timestamp
 
 # Check inject_context.sh logic manually
 NOW=$(date +%s)
 FILE_MOD=$(stat -f%m ~/.claude/sessions/{HASH}_session.json)
 FILE_AGE=$((NOW - FILE_MOD))
 echo "File age: $FILE_AGE seconds"
-# Should be: ≥ 300
+# Should be: ≥ 10
 ```
 
 **Fix:**
@@ -1453,9 +1452,9 @@ cc       # Start new session
 
 # Test 2: Stale session resets
 cc       # Session A
-# Wait 5+ minutes...
+# Do some work...
 exit     # Exit session A
-wait 5 min
+sleep 15 # Wait 15+ seconds
 cc       # Session B
 # Check: Status bar shows fresh time (0m or low), not old time
 
