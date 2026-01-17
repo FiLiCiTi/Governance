@@ -2,12 +2,12 @@
 # scripts/audit_sessions.sh
 # Purpose: Audit all session files with full session history per project
 # Usage: ./audit_sessions.sh (auto-saves to sessionaudit/)
-# Output: ~/Desktop/Governance/sessionaudit/YYYYMMDD_audit.txt
+# Output: ~/Desktop/FILICITI/Governance/sessionaudit/YYYYMMDD_audit.txt
 # v2.0: Multi-session history, cross-reference with logs, auto-save
 
 # Configuration
 SESSIONS_DIR="$HOME/.claude/sessions"
-OUTPUT_DIR="$HOME/Desktop/Governance/sessionaudit"
+OUTPUT_DIR="$HOME/Desktop/FILICITI/Governance/sessionaudit"
 STALE_DAYS=7
 STALE_SECONDS=$((STALE_DAYS * 24 * 3600))
 NOW=$(date +%s)
@@ -76,7 +76,7 @@ find_logs() {
 
     # Fallback: Governance Conversations (only if project is governance)
     if [[ "$project_name_lower" == "governance" ]]; then
-        local gov_path="$HOME/Desktop/Governance/Conversations"
+        local gov_path="$HOME/Desktop/FILICITI/Governance/Conversations"
         if [[ -d "$gov_path" ]]; then
             find "$gov_path" -maxdepth 1 -type f \( -name "*_governance.log" -o -name "*_governance_*.log" -o -name "*_Governance.log" -o -name "*_Governance_*.log" \) 2>/dev/null | head -20
         fi

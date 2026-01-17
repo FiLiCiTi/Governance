@@ -52,7 +52,9 @@
       "Bash(__NEW_LINE_c6d7f27f20093664__ echo \"\")",
       "Bash(# Check if there''s actually a Conversations folder in ''active'' echo \"\"=== DOES ''active'' HAVE ITS OWN LOGS? ===\"\" ls -la \"\"/Users/mohammadshehata/Desktop/FILICITI/Products/COEVOLVE/code/docs/implementation/active/../_governance/active/Conversations\"\" || echo \"\"No _governance/active/Conversations\"\" echo \"\"\"\" echo \"\"=== WHERE ARE THE LOGS COMING FROM? ===\"\" # The audit found logs for ''active'' - where from? find ~/Desktop/FILICITI -path \"\"*active*\"\" -name \"\"*.log\"\")",
       "Bash(~/.zprofile)",
-      "Bash(source ~/.zprofile)"
+      "Bash(source ~/.zprofile)",
+      "Bash(bash:*)",
+      "Bash(cc:*)"
     ]
   }
 }

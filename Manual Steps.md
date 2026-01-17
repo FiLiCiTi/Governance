@@ -1,0 +1,52 @@
+Manual Steps (After Exiting This Session)                                                                                                                                                               
+                                                                                                                                                                                                          
+  Step 1: Exit Claude Code                                                                                                                                                                                
+                                                                                                                                                                                                          
+  # Type in Claude Code terminal:                                                                                                                                                                         
+  exit                                                                                                                                                                                                    
+                                                                                                                                                                                                          
+  Step 2: Move Governance Directory                                                                                                                                                                       
+                                                                                                                                                                                                          
+  cd ~/Desktop                                                                                                                                                                                            
+  mv Governance FILICITI/Governance                                                                                                                                                                       
+                                                                                                                                                                                                          
+  Step 3: Remove Old Symlink                                                                                                                                                                              
+                                                                                                                                                                                                          
+  rm ~/Desktop/FILICITI/_Governance                                                                                                                                                                       
+                                                                                                                                                                                                          
+  Step 4: Update settings.json                                                                                                                                                                            
+                                                                                                                                                                                                          
+  # Open in editor:                                                                                                                                                                                       
+  code ~/.claude/settings.json                                                                                                                                                                            
+  # or                                                                                                                                                                                                    
+  nano ~/.claude/settings.json                                                                                                                                                                            
+                                                                                                                                                                                                          
+  # Find and replace ALL instances (11 total):                                                                                                                                                            
+  # FROM: /Users/mohammadshehata/Desktop/Governance                                                                                                                                                       
+  # TO:   /Users/mohammadshehata/Desktop/FILICITI/Governance                                                                                                                                              
+                                                                                                                                                                                                          
+  Or use sed for quick replacement:                                                                                                                                                                       
+  sed -i '' 's|/Users/mohammadshehata/Desktop/Governance|/Users/mohammadshehata/Desktop/FILICITI/Governance|g' ~/.claude/settings.json                                                                    
+                                                                                                                                                                                                          
+  Step 5: Verify Settings                                                                                                                                                                                 
+                                                                                                                                                                                                          
+  grep "Desktop/Governance" ~/.claude/settings.json                                                                                                                                                       
+  # Should return nothing (no matches)                                                                                                                                                                    
+                                                                                                                                                                                                          
+  grep "Desktop/FILICITI/Governance" ~/.claude/settings.json                                                                                                                                              
+  # Should show 11 lines                                                                                                                                                                                  
+                                                                                                                                                                                                          
+  Step 6: Start New Session in New Location                                                                                                                                                               
+                                                                                                                                                                                                          
+  cd ~/Desktop/FILICITI/Governance                                                                                                                                                                        
+  cc                                                                                                                                                                                                      
+                                                                                                                                                                                                          
+  Step 7: Test New Setup                                                                                                                                                                                  
+                                                                                                                                                                                                          
+  When Claude starts, say: "confirm and next"                                                                                                                                                             
+                                                                                                                                                                                                          
+  Verify:                                                                                                                                                                                                 
+  - Hook runs successfully                                                                                                                                                                                
+  - Boundaries display correctly                                                                                                                                                                          
+  - Project shows as "governance"                                                                                                                                                                         
+  - All hooks work

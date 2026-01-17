@@ -16,7 +16,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Paths
-GOVERNANCE_DIR="$HOME/Desktop/Governance"
+GOVERNANCE_DIR="$HOME/Desktop/FILICITI/Governance"
 GOVERNANCE_TEMPLATES="$GOVERNANCE_DIR/templates"
 GLOBAL_TEMPLATES="$HOME/.claude/templates"
 
