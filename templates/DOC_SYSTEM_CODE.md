@@ -753,7 +753,7 @@ The registry includes:
 
 | Document | Section | Usage |
 |----------|---------|-------|
-| **CONTEXT.md** | §III Active Work | Reference registry for status, don't duplicate |
+| **HANDOFF_REGISTRY.md** | Latest Session | Points to recent handoffs, auto-updated on wrap-up |
 | **ARCHITECTURE.md** | §7 Implementation Phases | Strategic view, registry has tactical tracking |
 | **Session Handoffs** | §II Work Summary | Pull completed/active/pending from registry |
 
@@ -803,7 +803,7 @@ See: `~/Desktop/Governance/templates/IMPLEMENTATION_REGISTRY-TEMPLATE.md`
 1. Create `implementation/IMPLEMENTATION_REGISTRY.md` from template
 2. Inventory all I###/G###/F### items (search docs/)
 3. Populate Active/Completed/Future sections
-4. Update CONTEXT.md §III to reference registry
+4. Update HANDOFF_REGISTRY.md to reference latest handoff
 5. Update ARCHITECTURE.md phases to reference registry
 
 **Effort:** ~30-60 minutes depending on project size

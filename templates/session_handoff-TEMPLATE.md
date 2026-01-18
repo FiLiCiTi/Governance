@@ -104,7 +104,7 @@ tests/file.test.ts - [Description of change]
 ## VII. Context Links
 
 **Related files**:
-- CONTEXT.md - Overall project state
+- HANDOFF_REGISTRY.md - Session index and latest state
 - CLAUDE.md - Project boundaries and rules
 - .claude/session_config.md - Custom configuration
 
@@ -191,7 +191,7 @@ tests/file.test.ts - [Description of change]
 **For next Claude**:
 
 Context loaded from this session:
-- Read CONTEXT.md (Layer 6) - shows [summary]
+- Read HANDOFF_REGISTRY.md (Layer 6) - shows last session summary
 - Review Section VI: Next Steps - [priority action]
 - Note Section V: [Blockers status]
 

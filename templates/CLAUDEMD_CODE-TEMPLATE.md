@@ -49,7 +49,7 @@ docs/
 
 ## Documentation Protocol
 
-1. **Session wrap-up**: Before ending, update CONTEXT.md and create session handoff
+1. **Session wrap-up**: Before ending, update HANDOFF_REGISTRY.md and create session handoff
 2. **Decision logging**: Use `#A` (architecture), `#D` (design), `#I` (infra), `#S` (security)
 3. **Implementation docs**: Create I###.md for each feature, G###.md for each bug
 4. **Code comments**: Add inline comments for complex logic only (avoid over-commenting)
@@ -78,8 +78,8 @@ docs/
 - **Documentation System**: `~/Desktop/Governance/templates/DOC_SYSTEM_CODE.md`
 - **Governance**: `~/Desktop/Governance/`
 - **Full v3 Spec**: `~/Desktop/Governance/V3_FULL_SPEC.md`
-- **Project Context**: `CONTEXT.md` (git-ignored, local only)
-- **Root Context**: `../CONTEXT.md` (if part of multi-project)
+- **Project Context**: `HANDOFF_REGISTRY.md` (git-ignored, local only)
+- **Root Context**: `../HANDOFF_REGISTRY.md` (if part of multi-project)
 
 ---
 

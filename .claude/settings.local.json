@@ -56,7 +56,11 @@
       "Bash(bash:*)",
       "Bash(cc:*)",
       "Bash(unalias:*)",
-      "Bash(exec zsh -l -c \"which cc && cc --help 2>&1 | head -3\")"
+      "Bash(exec zsh -l -c \"which cc && cc --help 2>&1 | head -3\")",
+      "Bash(if [ -f ~/Desktop/FILICITI/Governance/templates/CONTEXT-TEMPLATE.md ])",
+      "Bash(then mv ~/Desktop/FILICITI/Governance/templates/CONTEXT-TEMPLATE.md ~/Desktop/FILICITI/Governance/templates/deprecated/)",
+      "Bash(else echo \"File doesn''t exist\")",
+      "Bash(fi)"
     ]
   }
 }

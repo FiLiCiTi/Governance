@@ -71,8 +71,8 @@ monorepo/
 - Location: `[project]/session_handoffs/`
 - Naming: `YYYYMMDD_HHMM_[topic].md`
 
-**CONTEXT.md**:
-- Location: `[project]/CONTEXT.md`
+**HANDOFF_REGISTRY.md**:
+- Location: `[project]/HANDOFF_REGISTRY.md`
 
 ## Project Relationships
 
