@@ -60,7 +60,8 @@
       "Bash(if [ -f ~/Desktop/FILICITI/Governance/templates/CONTEXT-TEMPLATE.md ])",
       "Bash(then mv ~/Desktop/FILICITI/Governance/templates/CONTEXT-TEMPLATE.md ~/Desktop/FILICITI/Governance/templates/deprecated/)",
       "Bash(else echo \"File doesn''t exist\")",
-      "Bash(fi)"
+      "Bash(fi)",
+      "Bash(shasum:*)"
     ]
   }
 }
