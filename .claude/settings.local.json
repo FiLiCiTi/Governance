@@ -61,7 +61,12 @@
       "Bash(then mv ~/Desktop/FILICITI/Governance/templates/CONTEXT-TEMPLATE.md ~/Desktop/FILICITI/Governance/templates/deprecated/)",
       "Bash(else echo \"File doesn''t exist\")",
       "Bash(fi)",
-      "Bash(shasum:*)"
+      "Bash(shasum:*)",
+      "Bash(subl:*)",
+      "Bash(do)",
+      "Bash(xz:*)",
+      "Bash(kill:*)",
+      "Bash(do xz -d \"$file\")"
     ]
   }
 }
