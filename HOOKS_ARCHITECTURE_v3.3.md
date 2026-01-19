@@ -607,12 +607,77 @@ jq '.start_time' ~/.claude/sessions/{HASH}_session.json
 
 ~/Desktop/FILICITI/Governance/
 ├─ Conversations/
-│  └─ YYYYMMDD_HHMM.log            # Session conversation log
+│  ├─ YYYYMMDD_HHMM_project_clean.log  # Cleaned session log (98% smaller, readable)
+│  └─ YYYYMMDD_HHMM_project.log.xz     # Compressed raw log (backup)
 └─ scripts/
-   ├─ init_session.sh               # SessionStart hook
-   ├─ reset_context.sh              # Compact flag handler
+   ├─ clean_log.py                 # Log cleaning script (ANSI-preserving)
+   ├─ batch_clean_logs.py          # Batch processor for old logs
+   ├─ init_session.sh              # SessionStart hook
+   ├─ reset_context.sh             # Compact flag handler
    └─ ... (8 more hooks)
 ```
+
+---------------------------------------------------------------------------------------------------------------------------
+
+### 5.6 Session Logs
+
+**Log Files Created:**
+
+After each `cc` session, two files are created automatically:
+
+1. **Clean log** (`*_clean.log`):
+   - Human-readable, ANSI codes preserved
+   - 98.4% smaller than raw (1.7MB → 0.03MB)
+   - Contains: User inputs + Claude responses (duplicates removed)
+   - Use this for: Reading conversations, debugging, reference
+
+2. **Compressed raw log** (`*.log.xz`):
+   - Original recording with all terminal redraws
+   - Compressed with xz (90%+ compression)
+   - Use this for: Full session replay if needed (decompress with `unxz`)
+
+**Viewing Logs:**
+
+```bash
+# View clean log with colors preserved
+less -R Conversations/20260118_1401_governance_clean.log
+
+# Navigate:
+# - Arrow keys or Page Up/Down to scroll
+# - /search_term to search
+# - n for next match, N for previous
+# - q to quit
+
+# Decompress and view raw log (if needed)
+unxz Conversations/20260118_1401_governance.log.xz
+less -R Conversations/20260118_1401_governance.log
+```
+
+**Batch Processing Old Logs:**
+
+For existing unprocessed logs:
+```bash
+python3 scripts/batch_clean_logs.py
+# Scans ~/Desktop/FILICITI and ~/Desktop/DataStoragePlan
+# Shows summary by folder
+# Asks for confirmation
+# Shows progress bar during processing
+```
+
+**How It Works:**
+
+- cc wrapper (`bin/cc`) records session with `script` command
+- After session ends, `clean_log.py` runs automatically
+- Raw log compressed with `xz -9`, original deleted
+- Clean and compressed files kept
+
+**Log Cleaning Rules:**
+
+1. **User inputs**: Identified by `[48;2;55;55;55m[38;2;255;255;255m>` (background color)
+2. **Claude outputs**: Identified by `⏺` marker (any color) until separator
+3. **Duplicates**: Exact duplicates removed (keystroke captures, redraws)
+4. **Separators**: Deduplicated (keeps structure)
+5. **ANSI codes**: Preserved (colors/formatting intact)
 
 ---------------------------------------------------------------------------------------------------------------------------
 
