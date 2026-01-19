@@ -95,12 +95,39 @@ echo "└───────────────────────�
 echo ""
 
 # Start recording and run claude
-# macOS syntax: script -q [file] [command ...]
-# Linux syntax: script -q -c "command" [file]
+# v3.3.1: Using script + auto-clean + compress
+# Script records raw log, then auto-cleaned and compressed after session
 script -q "$LOG_FILE" claude $*
 
 echo ""
 echo "┌────────────────────────────────────────────────────────────────┐"
-echo "│  Session Ended                                                 │"
-echo "│  Log saved: $LOG_FILE"
+echo "│  Session Ended - Processing logs...                           │"
+echo "└────────────────────────────────────────────────────────────────┘"
+
+# Auto-clean and compress logs (Option 5)
+if [[ -f "$LOG_FILE" ]] && command -v python3 &>/dev/null; then
+    CLEAN_LOG="${LOG_FILE%.log}_clean.log"
+
+    # Run cleaner
+    python3 "$(dirname "$0")/../scripts/clean_log.py" "$LOG_FILE" "$CLEAN_LOG" 2>/dev/null
+
+    if [[ -f "$CLEAN_LOG" ]]; then
+        # Compress original raw log
+        if command -v xz &>/dev/null; then
+            xz -z -9 "$LOG_FILE"  # Creates .log.xz, deletes original
+            echo "│  ✅ Cleaned: $CLEAN_LOG"
+            echo "│  ✅ Compressed: ${LOG_FILE}.xz"
+        else
+            # Fallback to gzip if xz not available
+            gzip -9 "$LOG_FILE"  # Creates .log.gz, deletes original
+            echo "│  ✅ Cleaned: $CLEAN_LOG"
+            echo "│  ✅ Compressed: ${LOG_FILE}.gz"
+        fi
+    else
+        echo "│  ⚠️  Cleaning failed, kept raw: $LOG_FILE"
+    fi
+else
+    echo "│  Log saved: $LOG_FILE"
+fi
+
 echo "└────────────────────────────────────────────────────────────────┘"
