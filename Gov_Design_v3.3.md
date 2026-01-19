@@ -6,13 +6,14 @@
 
 ## Table of Contents
 
-| Section | Title                                         | Line |
-|---------|-----------------------------------------------|------|
-| 1       | [Overview](#1-overview)                       | :17  |
-| 2       | [Design Principles](#2-design-principles)     | :37  |
-| 3       | [Problems Solved](#3-problems-solved)         | :54  |
-| 4       | [Key Decisions](#4-key-decisions)             | :78  |
-| 5       | [Benefits](#5-benefits)                       | :207 |
+| Section | Title                                                | Line |
+|---------|------------------------------------------------------|------|
+| 1       | [Overview](#1-overview)                              | :19  |
+| 2       | [Design Principles](#2-design-principles)            | :39  |
+| 3       | [Problems Solved](#3-problems-solved)                | :56  |
+| 4       | [Key Decisions](#4-key-decisions)                    | :80  |
+| 5       | [Benefits](#5-benefits)                              | :209 |
+| 9       | [Known Issues & Future Improvements](#9-known-issues-future-improvements) | :314 |
 
 ---------------------------------------------------------------------------------------------------------------------------
 
@@ -308,6 +309,111 @@ Status bar: Automatically reflects change
 **After v3.3:**
 - Disable `check_session_duration.sh` → context warnings still work
 - Adjust context thresholds in `check_context_usage.sh` → time warnings unaffected
+
+
+---------------------------------------------------------------------------------------------------------------------------
+
+## 9. Known Issues & Future Improvements
+
+### 9.1 Critical Bugs
+
+#### Issue #1: Session Timer Corruption After "Refresh Context"
+
+**Status:** 🔴 Critical - Needs fix
+
+**Observed behavior:**
+```
+User runs: "refresh context"
+Claude resets context state successfully
+Status bar shows: 🕐 29480493m (29 million minutes ≈ 56 years!)
+```
+
+**Expected behavior:**
+- Session timer should continue from original start time
+- Should show reasonable elapsed time (e.g., "45m" or "2h 30m")
+
+**Root cause (suspected):**
+- "refresh context" creates/updates `~/.claude/sessions/{hash}_context.json`
+- Session timer likely stored in separate `{hash}_session.json` file (v3.3 architecture)
+- When context file created fresh, timer calculation corrupts
+
+**Impact:** High - Makes status bar unusable after context refresh
+
+---
+
+#### Issue #2: Project Hash vs Session ID Confusion
+
+**Status:** 🔴 Critical - Architecture flaw
+
+**Observed behavior:**
+```
+User runs: "refresh context"
+Claude finds sessionId in sessions-index.json: e87daee5-676d-4022-b331-d9ca841e2711
+Claude says: "I need to find the project hash (not session ID)"
+Claude computes: MD5 hash of project path → 5451836db64d6ce0ef81383ac34ba32e
+Claude uses: {project_hash}_context.json for state file
+```
+
+**The problem:**
+- **Collision risk**: Multiple sessions in same project overwrite each other's state
+- **Inconsistency**: Session-specific state should use session ID, not project hash
+- **Architecture unclear**: v3.3 doesn't specify state file naming convention
+
+**Example scenario showing collision:**
+```
+Session 1 in fil-yuta: Uses 5451836db64d6ce0ef81383ac34ba32e_context.json
+Session 2 in fil-yuta: Uses 5451836db64d6ce0ef81383ac34ba32e_context.json (same file!)
+→ Session 2 overwrites Session 1's context state
+```
+
+**Proposed solution:**
+- Use session ID for state files: `{sessionId}_context.json`, `{sessionId}_session.json`
+- OR document why project hash is used and handle multi-session scenarios
+
+**Impact:** High - Makes multi-session work unreliable
+
+---
+
+### 9.2 Enhancements Needed
+
+#### Enhancement #1: Log Cleaning Script Refinement
+
+**Status:** 🟡 Working but needs tweak
+
+**Current state:**
+- ✅ `clean_log.py` works for files <500MB
+- ✅ `clean_log_large.py` works for files >500MB (99%+ reduction)
+- ✅ Successfully processed 21.6GB → 675KB across 3 large files
+
+**Needs improvement:**
+- Additional filtering or optimization (specific tweak not detailed yet)
+- Document edge cases
+- Add validation checks
+
+**Priority:** Medium - Functional but can be refined
+
+---
+
+#### Enhancement #2: Reconsider Custom Status Bar
+
+**Status:** 🟢 Working - Needs review
+
+**Context:**
+- v3.3 implements custom status bar with context tracking
+- Status bar shows: Model, todos, hooks, context size, warmup time, session timer
+
+**Observation:**
+- Context tracking working well with separated state files
+- Log cleaning reduces storage needs dramatically
+- Question: Is complex status bar still necessary?
+
+**Consider:**
+- Simplify status bar (remove less useful indicators)
+- Keep essential info only (model, context, timer)
+- Remove indicators that add complexity without value
+- Focus on reliability over features
+
+**Priority:** Low - Nice to have, not urgent
 
 ---------------------------------------------------------------------------------------------------------------------------
 
