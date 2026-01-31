@@ -33,6 +33,9 @@
 | 8 | `check_session_duration.sh` | Stop        | Warn if session too long             | session      |
 | 9 | `check_context_usage.sh`    | Stop        | Warn if context too high             | context      |
 | 10| `finalize_session.sh`       | SessionEnd  | Archive session                      | All 3        |
+| 11| `check_session_history.sh`  | UserPrompt  | Warn if session .jsonl files bloated | (read-only)  |
+|   |                             | Submit +    |                                      |              |
+|   |                             | PreCompact  |                                      |              |
 
 **Additional:**
 - `status_bar.sh` - Status line display (reads all 3 state files)
@@ -164,6 +167,12 @@ USER RUNS: cc
 ### 3.2 During Session Flow
 
 ```
+USER PROMPT SUBMITTED
+    │
+    ▼
+2b. check_session_history.sh (UserPromptSubmit)
+    └─ If total .jsonl > 100 MB: Show session history table
+
 TOOL REQUEST
     │
     ▼
@@ -405,7 +414,34 @@ USER: exit
 
 ---------------------------------------------------------------------------------------------------------------------------
 
-### 4.11 Status Bar: status_bar.sh
+### 4.11 Hook: check_session_history.sh
+
+**Events:** UserPromptSubmit, PreCompact
+
+**Purpose:** Monitor Claude Code session `.jsonl` file sizes and warn before they cause startup hangs
+
+**Decision:** #G-SESSION-HISTORY-PRUNING (see `SESSION_HISTORY_PRUNING.md`)
+
+**Logic:**
+1. Resolve project session directory: `~/.claude/projects/{PROJECT_PATH_WITH_DASHES}/`
+2. Sum all `.jsonl` file sizes
+3. If UserPromptSubmit: only output if total > threshold (default 100 MB)
+4. If PreCompact (`--always`): always output regardless of size
+5. Parse `sessions-index.json` for metadata (summary, date, message count)
+6. Detect orphaned sessions (`.jsonl` not in index)
+7. Output formatted table with session details
+
+**Configuration in settings.json:**
+- UserPromptSubmit: `check_session_history.sh --threshold 100`
+- PreCompact: `check_session_history.sh --always`
+
+**Files read:** `~/.claude/projects/{PATH}/sessions-index.json`, `*.jsonl` (size only)
+
+**Output:** Warning table with session #, date, summary, messages, size, status (indexed/ORPHAN)
+
+---------------------------------------------------------------------------------------------------------------------------
+
+### 4.12 Status Bar: status_bar.sh
 
 **Type:** Status line display (continuous, not a hook)
 
