@@ -3,21 +3,21 @@
 > **Project:** Governance
 > **Type:** OPS
 > **Version:** v3.3
-> **Last Updated:** 2026-01-31
+> **Last Updated:** 2026-02-05
 
 ---
 
 ## Current State (Latest Session)
 
-**Last Session:** 2026-01-31 06:00 AM
-**Handoff:** [`20260131_0600_session-history-pruning.md`](session_handoffs/20260131_0600_session-history-pruning.md)
+**Last Session:** 2026-02-05 09:27 AM
+**Handoff:** [`20260205_0927_api-400-empty-text-fix.md`](session_handoffs/20260205_0927_api-400-empty-text-fix.md)
 
 **Quick Summary:**
-Investigated fil-bizz Claude Code startup hang. Root cause: 297 MB of accumulated session `.jsonl` files (one session was 242 MB from reading images/PDFs). Built `check_session_history.sh` hook (#11) with two triggers: UserPromptSubmit (threshold warning at 100 MB) and PreCompact (always show). Cleaned up fil-bizz session history. Updated HOOKS_ARCHITECTURE_v3.3.md.
+Fixed API 400 error ("text content blocks must contain non-whitespace text") in fil-yuta session. Root cause: 15 whitespace-only text blocks (`"\n\n"`) in session JSONL file. Fixed by replacing with `"."` and restarting session via `claude --resume`. Documented full runbook for future occurrences.
 
 **Next Steps:**
-- Test fil-bizz launches successfully after cleanup
-- Verify new hooks fire correctly in live sessions
+- Monitor for recurrence of empty text block issue
+- Investigate root cause (what generates empty text blocks)
 - Fix v3.3 session timer corruption bug (carried over)
 - Resolve hash vs session ID architecture issue (carried over)
 
@@ -27,6 +27,7 @@ Investigated fil-bizz Claude Code startup hang. Root cause: 297 MB of accumulate
 
 | Date       | Time  | Handoff File                                     | Duration | Focus                              | Status      |
 |------------|-------|--------------------------------------------------|----------|------------------------------------|-------------|
+| 2026-02-05 | 09:27 | [api-400-empty-text-fix][NEW]                    | ~31m     | API 400 empty text block fix       | ✅ Complete |
 | 2026-01-31 | 06:00 | [session-history-pruning][0]                     | ~45m     | Session .jsonl pruning hook #11    | ✅ Complete |
 | 2026-01-19 | 04:38 | [large-file-processing][1]                       | ~3h      | Large file processing + v3.3 bugs  | ✅ Complete |
 | 2026-01-18 | 20:18 | [batch-log-cleanup][2]                           | ~52m     | Batch log cleanup + recovery       | ✅ Complete |
@@ -45,6 +46,7 @@ Investigated fil-bizz Claude Code startup hang. Root cause: 297 MB of accumulate
 | 2026-01-11 | 07:30 | [template-standardization-v3.1][15]              | ~60m     | Template standardization           | ✅ Complete |
 | 2026-01-11 | 04:30 | [code-doc-system-v3.1][16]                       | ~180m    | Code documentation system          | ✅ Complete |
 
+[NEW]: session_handoffs/20260205_0927_api-400-empty-text-fix.md
 [0]: session_handoffs/20260131_0600_session-history-pruning.md
 [1]: session_handoffs/20260119_0438_large-file-processing.md
 [2]: session_handoffs/20260118_2018_batch-log-cleanup.md
