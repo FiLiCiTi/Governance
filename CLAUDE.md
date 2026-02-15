@@ -10,7 +10,6 @@
 ## Critical Rules
 
 1. Safety first: No destructive operations without confirmation
-2. Use 2026 for all dates
 
 ## Links
 
