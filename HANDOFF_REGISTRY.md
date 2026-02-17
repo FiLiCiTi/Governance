@@ -3,23 +3,24 @@
 > **Project:** Governance
 > **Type:** OPS
 > **Version:** v3.3
-> **Last Updated:** 2026-02-15
+> **Last Updated:** 2026-02-17
 
 ---
 
 ## Current State (Latest Session)
 
-**Last Session:** 2026-02-15 01:15 PM
-**Handoff:** [`20260215_1315_rule-sanitization-m1-migration.md`](session_handoffs/20260215_1315_rule-sanitization-m1-migration.md)
+**Last Session:** 2026-02-17 04:15 AM
+**Handoff:** [`20260217_0415_ccl-script-relocation.md`](session_handoffs/20260217_0415_ccl-script-relocation.md)
 
 **Quick Summary:**
-Sanitized "Use 2026 for all dates" rule from all CLAUDE.md files (Governance + DataStoragePlan). Created comprehensive M1 laptop migration guide (`guides/m1_migration_guide.md`) covering file transfer, path adaptation, plugin installation, and verification.
+Relocated `cc` script to `~/bin/ccl` (general location outside Desktop) and updated all paths for Governance move to MyMINDGEM/L1-Flow/L1.1-Governance. Script paths updated, ~/.zshrc PATH updated. Session exit required before completing Governance folder move.
 
 **Next Steps:**
-- Execute M1 laptop migration using guide
+- Complete Governance folder move to ~/Desktop/MyMINDGEM/L1-Flow/L1.1-Governance (backup existing L1.1-Governance first)
+- Test ccl command in new session
+- Update global ~/.claude/CLAUDE.md links if needed
 - Fix v3.3 session timer corruption bug (carried over)
 - Resolve hash vs session ID architecture issue (carried over)
-- Investigate root cause of empty text blocks in session JSONL (carried over)
 
 ---
 
@@ -27,7 +28,8 @@ Sanitized "Use 2026 for all dates" rule from all CLAUDE.md files (Governance + D
 
 | Date       | Time  | Handoff File                                     | Duration | Focus                              | Status      |
 |------------|-------|--------------------------------------------------|----------|------------------------------------|-------------|
-| 2026-02-15 | 13:15 | [rule-sanitization-m1-migration][NEW]            | ~15m     | Rule cleanup + M1 migration guide  | ✅ Complete |
+| 2026-02-17 | 04:15 | [ccl-script-relocation][NEW]                     | ~29m     | ccl script to ~/bin + path updates | ✅ Complete |
+| 2026-02-15 | 13:15 | [rule-sanitization-m1-migration][18]             | ~15m     | Rule cleanup + M1 migration guide  | ✅ Complete |
 | 2026-02-05 | 09:27 | [api-400-empty-text-fix][17]                     | ~31m     | API 400 empty text block fix       | ✅ Complete |
 | 2026-01-31 | 06:00 | [session-history-pruning][0]                     | ~45m     | Session .jsonl pruning hook #11    | ✅ Complete |
 | 2026-01-19 | 04:38 | [large-file-processing][1]                       | ~3h      | Large file processing + v3.3 bugs  | ✅ Complete |
@@ -47,7 +49,8 @@ Sanitized "Use 2026 for all dates" rule from all CLAUDE.md files (Governance + D
 | 2026-01-11 | 07:30 | [template-standardization-v3.1][15]              | ~60m     | Template standardization           | ✅ Complete |
 | 2026-01-11 | 04:30 | [code-doc-system-v3.1][16]                       | ~180m    | Code documentation system          | ✅ Complete |
 
-[NEW]: session_handoffs/20260215_1315_rule-sanitization-m1-migration.md
+[NEW]: session_handoffs/20260217_0415_ccl-script-relocation.md
+[18]: session_handoffs/20260215_1315_rule-sanitization-m1-migration.md
 [17]: session_handoffs/20260205_0927_api-400-empty-text-fix.md
 [0]: session_handoffs/20260131_0600_session-history-pruning.md
 [1]: session_handoffs/20260119_0438_large-file-processing.md
