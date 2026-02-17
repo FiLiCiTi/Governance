@@ -70,7 +70,11 @@
       "Bash(while ps aux)",
       "Bash(do sleep 10)",
       "Bash(do sleep 30)",
-      "Bash(~/Desktop/FILICITI/Governance/Gov_Design_v3.3.md.tmp)"
+      "Bash(~/Desktop/FILICITI/Governance/Gov_Design_v3.3.md.tmp)",
+      "Bash(do basename \"$dir\")",
+      "Bash(test:*)",
+      "Bash(file:*)",
+      "Bash(~/bin/ccl:*)"
     ]
   }
 }

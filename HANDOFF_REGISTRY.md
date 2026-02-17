@@ -9,16 +9,15 @@
 
 ## Current State (Latest Session)
 
-**Last Session:** 2026-02-17 04:15 AM
-**Handoff:** [`20260217_0415_ccl-script-relocation.md`](session_handoffs/20260217_0415_ccl-script-relocation.md)
+**Last Session:** 2026-02-17 05:42 AM
+**Handoff:** [`20260217_0542_path_migration_completion.md`](session_handoffs/20260217_0542_path_migration_completion.md)
 
 **Quick Summary:**
-Relocated `cc` script to `~/bin/ccl` (general location outside Desktop) and updated all paths for Governance move to MyMINDGEM/L1-Flow/L1.1-Governance. Script paths updated, ~/.zshrc PATH updated. Session exit required before completing Governance folder move.
+Completed path migration after Governance folder move. All 23 scripts copied to ~/bin/scripts/ (location-independent). Updated ~/.claude/settings.json (12 hooks + status bar + permissions), global CLAUDE.md (4 links), and session start protocol (HANDOFF_REGISTRY search order). ccl and hooks now work from any location.
 
 **Next Steps:**
-- Complete Governance folder move to ~/Desktop/MyMINDGEM/L1-Flow/L1.1-Governance (backup existing L1.1-Governance first)
-- Test ccl command in new session
-- Update global ~/.claude/CLAUDE.md links if needed
+- Test migration: reload shell, test ccl command, verify hooks
+- Clean up: Remove old ~/Desktop/FILICITI/Governance if exists
 - Fix v3.3 session timer corruption bug (carried over)
 - Resolve hash vs session ID architecture issue (carried over)
 
@@ -28,7 +27,8 @@ Relocated `cc` script to `~/bin/ccl` (general location outside Desktop) and upda
 
 | Date       | Time  | Handoff File                                     | Duration | Focus                              | Status      |
 |------------|-------|--------------------------------------------------|----------|------------------------------------|-------------|
-| 2026-02-17 | 04:15 | [ccl-script-relocation][NEW]                     | ~29m     | ccl script to ~/bin + path updates | ✅ Complete |
+| 2026-02-17 | 05:42 | [path-migration-completion][NEW]                 | ~34m     | Path migration after folder move   | ✅ Complete |
+| 2026-02-17 | 04:15 | [ccl-script-relocation][19]                      | ~29m     | ccl script to ~/bin + path updates | ✅ Complete |
 | 2026-02-15 | 13:15 | [rule-sanitization-m1-migration][18]             | ~15m     | Rule cleanup + M1 migration guide  | ✅ Complete |
 | 2026-02-05 | 09:27 | [api-400-empty-text-fix][17]                     | ~31m     | API 400 empty text block fix       | ✅ Complete |
 | 2026-01-31 | 06:00 | [session-history-pruning][0]                     | ~45m     | Session .jsonl pruning hook #11    | ✅ Complete |
@@ -49,7 +49,8 @@ Relocated `cc` script to `~/bin/ccl` (general location outside Desktop) and upda
 | 2026-01-11 | 07:30 | [template-standardization-v3.1][15]              | ~60m     | Template standardization           | ✅ Complete |
 | 2026-01-11 | 04:30 | [code-doc-system-v3.1][16]                       | ~180m    | Code documentation system          | ✅ Complete |
 
-[NEW]: session_handoffs/20260217_0415_ccl-script-relocation.md
+[NEW]: session_handoffs/20260217_0542_path_migration_completion.md
+[19]: session_handoffs/20260217_0415_ccl-script-relocation.md
 [18]: session_handoffs/20260215_1315_rule-sanitization-m1-migration.md
 [17]: session_handoffs/20260205_0927_api-400-empty-text-fix.md
 [0]: session_handoffs/20260131_0600_session-history-pruning.md

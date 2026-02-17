@@ -42,6 +42,8 @@ temp/
 
 # Logs
 *.log
+*.log.xz
+*.log.gz
 logs/
 
 # OS generated files

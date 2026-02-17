@@ -389,6 +389,7 @@ Session 2 in fil-yuta: Uses 5451836db64d6ce0ef81383ac34ba32e_context.json (same 
 - Additional filtering or optimization (specific tweak not detailed yet)
 - Document edge cases
 - Add validation checks
+- Session header before "confirm and next" is lost
 
 **Priority:** Medium - Functional but can be refined
 
@@ -412,9 +413,73 @@ Session 2 in fil-yuta: Uses 5451836db64d6ce0ef81383ac34ba32e_context.json (same 
 - Keep essential info only (model, context, timer)
 - Remove indicators that add complexity without value
 - Focus on reliability over features
+- Automated update by detecting /command
 
 **Priority:** Low - Nice to have, not urgent
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+
+MY NOTES:
+
+Prompt to Avoid This Problem                                                                                                                                                                            
+                                                                                                                                                                                                          
+  When asking Claude to create a document, use this pattern:                                                                                                                                              
+                                                                                                                                                                                                          
+  Save the summary above to [filename].md                                                                                                                                                                 
+                                                                                                                                                                                                          
+  Rules:                                                                                                                                                                                                  
+  1. Use EXACTLY the content I approved (don't expand/reinvent)                                                                                                                                           
+  2. Add only: header metadata, TOC, separators per template                                                                                                                                              
+  3. Follow DOCUMENT_FORMAT-TEMPLATE.md for structure                                                                                                                                                     
+                                                                                                                                                                                                          
+  Or more explicitly:                                                                                                                                                                                     
+                                                                                                                                                                                                          
+  Create [filename].md using this exact content:                                                                                                                                                          
+  [paste your approved summary here]                                                                                                                                                                      
+                                                                                                                                                                                                          
+  Format: Add template header/TOC/separators only. Do not add sections.                                                                                                                                   
+                                                                                                                                                                                                          
+  ---                                                                                                                                                                                                     
+  Why this works:                                                                                                                                                                                         
+  - "EXACTLY" tells me not to expand                                                                                                                                                                      
+  - "don't expand/reinvent" prevents over-engineering                                                                                                                                                     
+  - Explicit content reference = what you see is what you get                                                                                                                                             
+                                                                                                                                                                                                          
+  The root problem was: When you said "create document", I interpreted it as "create comprehensive documentation" instead of "save approved output with formatting."                                      
+                                                                                                                                                                                                          
+  Add to CLAUDE.md? You could add a rule like:                                                                                                                                                            
+                                                                                                                                                                                                          
+  ## Document Creation Rule                                                                                                                                                                               
+  When user says "save this to document" or "create document from above":                                                                                                                                 
+  - Use the conversation output EXACTLY as shown                                                                                                                                                          
+  - Add ONLY template formatting (header, TOC, separators)                                                                                                                                                
+  - Do NOT expand, reinvent, or add comprehensive sections                                                                                                                                                
+                                                                                                                                                                                                          
+  Want me to add this to fil-bizz/CLAUDE.md?                                       
+
+
+
+  ________
+
+
+  2. Avoiding This in Future                                                                                                                                                                              
+                                                                                                                                                                                                          
+  New Rule for CLAUDE.md (fil-yuta):                                                                                                                                                                      
+                                                                                                                                                                                                          
+  ## Spec Document Rules (#D-SPEC)                                                                                                                                                                        
+                                                                                                                                                                                                          
+  **NEVER summarize/paraphrase spec content. Violations cause semantic drift.**                                                                                                                           
+                                                                                                                                                                                                          
+  When creating or updating spec documents:                                                                                                                                                               
+  1. **VERBATIM COPY** - Tables, rules, code blocks must be copied exactly                                                                                                                                
+  2. **REFERENCE, DON'T REWRITE** - If section is long, reference: "See 2.10 §7.3"                                                                                                                        
+  3. **NO SYNONYMS** - "Report Terminal" ≠ "Report is Terminal" ≠ "Report cannot exit"                                                                                                                    
+  4. **PRESERVE STRUCTURE** - Keep same numbering (R1-R8, not renumber to fit)                                                                                                                            
+                                                                                                                                                                                                          
+  Rationale: G1 gap showed R1-R8 rules inverted meaning through paraphrasing.          
+------------
+
+
 
 *Template: ~/Desktop/FILICITI/Governance/templates/DOCUMENT_FORMAT-TEMPLATE.md | v3.3*
